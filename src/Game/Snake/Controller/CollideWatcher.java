@@ -103,7 +103,7 @@ public class CollideWatcher {
     *
     * 返回值: 相交则返回真
     * */
-    private boolean isCollided(Rectangle lhs, Rectangle rhs) {
+    public static boolean isCollided(Rectangle lhs, Rectangle rhs) {
         return lhs.intersects(rhs);
     }
 

@@ -14,4 +14,4 @@ MINVER=$(($VER-100*$MAXVER-10*$SECVER))
 
 sed -i '' "s/final String Version.*/final String Version = \"$MAXVER.$SECVER.$MINVER ($SHA1)\";/g" "$2"
 
-sleep 2
+sleep 1

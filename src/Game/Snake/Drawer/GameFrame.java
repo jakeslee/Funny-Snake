@@ -18,6 +18,3 @@ public class GameFrame extends JFrame {
     }
 }
 
-class GameScreen extends JPanel {
-
-}

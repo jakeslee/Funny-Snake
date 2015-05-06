@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by jakes on 15/5/6.
  */
-interface Collidedable {
+public interface Collidedable {
     /*
     * 获取物体的区域
     * */

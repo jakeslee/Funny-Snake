@@ -97,6 +97,17 @@ public class CollideWatcher {
     }
 
     /*
+    * 生成Rectangle
+    *
+    * 参数: X, Y  区域坐标
+    *
+    * 返回值: 产生的Rectangle
+    * */
+    public static Rectangle generateRectangle(int X, int Y) {
+        return new Rectangle(X, Y, Config.SNAKE_BODY_WIDTH, Config.SNAKE_BODY_WIDTH);
+    }
+
+    /*
     * 判断两个矩形是否相交
     *
     * 参数: lhs, rhs  用于判断的矩形

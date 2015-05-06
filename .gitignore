@@ -1,6 +1,5 @@
 out/
 .DS_Store
-**/Version.java
 **/.idea/workspace.xml
 **/.idea/tasks.xml
 *.iws

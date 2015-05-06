@@ -3,7 +3,7 @@ package Game.Snake.Controller;
 import java.awt.*;
 
 /**
- * Created by jakes on 15/5/6.
+ * Created by jakes, lhwarthas on 15/5/6.
  */
 public interface Food {
     /*
@@ -23,4 +23,10 @@ public interface Food {
     * */
     boolean isEaten(Rectangle head);
 
+    /*
+    * 食物被吃掉会产生的响应
+    *
+    * 用于重新产生食物
+    * */
+    void setEatenListener(EventProcessListener eatenListener);
 }

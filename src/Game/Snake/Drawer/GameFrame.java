@@ -11,8 +11,9 @@ import java.awt.*;
 public class GameFrame extends JFrame {
     GameScreen gameScreen = null;
     public GameFrame() throws HeadlessException {
-        super("贪吃蛇 v" + Config.VERSION);
+        super("贪吃蛇 " + Config.VERSION);
         setSize(Config.SCREEN_SIZE);
+        setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 }

@@ -28,6 +28,8 @@ public class CollideWatcher {
             public void actionPerformed(ActionEvent e) {
                 for (String lhs : watchers.keySet()){
                     for (String rhs : watchers.keySet()){
+                        if (lhs.equals(rhs))
+                            continue;
                         scan(lhs, rhs);
                     }
                 }

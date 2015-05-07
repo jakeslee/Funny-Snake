@@ -53,6 +53,13 @@ public interface Snake {
     void setDeathListener(EventProcessListener eventProcessListener);
 
     /*
+    * 刷新事件通知
+    *
+    * 参数: eventProcessListener  响应刷新事件的监听器
+    * */
+    void setOnRefreshListener(EventProcessListener eventProcessListener);
+
+    /*
     * 取得蛇身体所有节点，用以绘制
     * */
     List<Rectangle> getSnakeNodes();

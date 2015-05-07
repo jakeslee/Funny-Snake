@@ -74,6 +74,17 @@ public class CollideWatcher {
         }
     }
 
+    /*
+    * 取得对应的监视对象
+    *
+    * 参数: identification    对象的ID
+    *
+    * 返回值: 对应的对象
+    * */
+    public Object get(String identification) {
+        return watchers.get(identification);
+    }
+
     //Private Method
     /*
     * 扫描两个对象是否相交

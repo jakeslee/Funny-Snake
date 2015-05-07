@@ -68,4 +68,34 @@ public class Config {
     * 绘制视口的区域
     * */
     public static Dimension VIEW_SIZE = new Dimension(SCREEN_SIZE.width, SCREEN_SIZE.height - CONTROL_BAR_HEIGHT);
+
+    /*
+    * 初始背景图片路径
+    * */
+    public static String BACKGROUND_PATH_DEFAULT = "res/bg-1.jpg";
+
+    /*
+    * 背景图片路径
+    * */
+    public static String BACKGROUND_PATH = null;
+
+    /*
+    * 蛇头图片路径
+    * */
+    public static String SNAKE_HEAD_IMG = null;
+
+    /*
+    * 蛇身图片路径
+    * */
+    public static String SNAKE_BODY_IMG = null;
+
+    /*
+    * 蛇转向图片路径
+    * */
+    public static String SNAKE_TURN_IMG = null;
+
+    /*
+    * 蛇尾图片路径
+    * */
+    public static String SNAKE_TAIL_IMG = null;
 }

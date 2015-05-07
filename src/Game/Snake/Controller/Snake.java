@@ -60,11 +60,6 @@ public interface Snake {
     void setOnRefreshListener(EventProcessListener eventProcessListener);
 
     /*
-    * 取得蛇身体所有节点，用以绘制
-    * */
-    List<Rectangle> getSnakeNodes();
-
-    /*
     * 用于数据更新的常量，Map<int, Object>
     *
     * CURRENT_LENGTH    当前长度

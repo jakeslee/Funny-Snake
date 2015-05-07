@@ -33,7 +33,7 @@ public class Config {
     /*
     * 软件版本
     * */
-    public static final String VERSION = Version.Version;
+    public static final String VERSION = Version.Version.toUpperCase();
 
     //Variable
     /*
@@ -98,4 +98,9 @@ public class Config {
     * 蛇尾图片路径
     * */
     public static String SNAKE_TAIL_IMG = null;
+
+    /*
+    * 食物图片路径
+    * */
+    public static String FOOD_IMG = null;
 }

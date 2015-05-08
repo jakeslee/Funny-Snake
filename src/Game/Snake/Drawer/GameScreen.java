@@ -24,6 +24,8 @@ class GameScreen extends JPanel {
     * 显示资源
     * */
     private Image imageBackground = null;
+    private Image imageBackgroundStart = null;
+    private Image imageBackgroundDefault = null;
     private Image imageSnakeHead = null;
     private Image imageSnakeBody = null;
     private Image imageSnakeTurn = null;
@@ -48,6 +50,7 @@ class GameScreen extends JPanel {
         collideWatcher = new CollideWatcher();
         snake = Factory.createSnake();
 
+        System.out.println(Snake.class.getName());
         /*
         * 蛇死亡事件处理
         * */
@@ -95,15 +98,37 @@ class GameScreen extends JPanel {
         Config.addUpdateEventListener(new EventProcessAdapter() {
             @Override
             public void updateEvent(Object data) {
+                //BACKGROUND_PATH_START
+                if (Config.BACKGROUND_PATH_START != null && !Config.BACKGROUND_PATH_START.equals("")) {
+                    try {
+                        imageBackgroundStart = ImageIO.read(new File(Config.BACKGROUND_PATH_START));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    imageBackgroundStart = null;
+                }
+
+                //BACKGROUND_PATH_DEFAULT
+                if (Config.BACKGROUND_PATH_DEFAULT != null && !Config.BACKGROUND_PATH_DEFAULT.equals("")) {
+                    try {
+                        imageBackgroundDefault = ImageIO.read(new File(Config.BACKGROUND_PATH_DEFAULT));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    imageBackgroundDefault = null;
+                }
+
                 //BACKGROUND_PATH
-                if (Config.BACKGROUND_PATH != null && Config.BACKGROUND_PATH.equals("")) {
+                if (Config.BACKGROUND_PATH != null && !Config.BACKGROUND_PATH.equals("")) {
                     try {
                         imageBackground = ImageIO.read(new File(Config.BACKGROUND_PATH));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 } else {
-                    imageBackground = null;
+                    imageBackground = imageBackgroundDefault;
                 }
 
                 //FOOD_IMG
@@ -132,6 +157,7 @@ class GameScreen extends JPanel {
                     imageSnakeTurn = null;
                     imageSnakeTail = null;
                 }
+
             }
         });
 
@@ -228,6 +254,9 @@ class GameScreen extends JPanel {
             graphics.drawImage(IMG, (int)food_rect.getX(), (int)food_rect.getY(), this);
         }
 
+        //响应数据更新事件
+        String statusBar = "蛇身长度: " + getSnake().getDrawableArea().rectangles.size();
+        updateEventListener.updateEvent(statusBar);
     }
 
     /*
@@ -312,20 +341,20 @@ class GameScreen extends JPanel {
         this.updateEventListener = updateEventListener;
     }
 
+
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
         if (!starting) {
-            try {
-                imageBackground = ImageIO.read(new File(Config.BACKGROUND_PATH_DEFAULT));
-                if (imageBackground == null){
-                    System.out.println("end-hahha");
-                }
+            if (imageBackgroundStart == null){
+                Color c = g.getColor();
+                g.setColor(Config.BACKGROUD_COLOR);
+                g.fillRect(0, 0, this.getWidth(), this.getHeight());
+                g.setColor(c);
+            }else
                 g.drawImage(imageBackground, 0, 0, this.getWidth(), this.getHeight(), this);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
 
     }

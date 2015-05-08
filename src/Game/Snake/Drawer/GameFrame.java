@@ -65,6 +65,8 @@ public class GameFrame extends JFrame {
 
         add(controlPanel, BorderLayout.NORTH);
         add(gameScreen);
+
+        Config.update();
     }
 }
 

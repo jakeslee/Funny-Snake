@@ -7,14 +7,14 @@ public class Factory {
     /*
     * 构造Snake工厂函数
     * */
-    public static Snake createSnake() {
-      return new SnakeImpl();
+    public static Snake createSnake(CollideWatcher watcher) {
+      return new SnakeImpl(watcher);
     }
 
     /*
     * 构造Snake工厂函数
     * */
-    public static Food createFood() {
-        return new FoodImpl();
+    public static Food createFood(CollideWatcher watcher) {
+        return new FoodImpl(watcher);
     }
 }

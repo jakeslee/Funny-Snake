@@ -32,10 +32,13 @@ public class GameFrame extends JFrame {
                 }
             }
         });
+        gameScreen.setFocusable(true);
+        gameScreen.requestFocusInWindow();
 
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        jButtonStart.setFocusable(false);
         jButtonStart.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -50,6 +53,7 @@ public class GameFrame extends JFrame {
             }
         });
         JButton jButtonExit = new JButton("退出游戏");
+        jButtonExit.setFocusable(false);
         jButtonExit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

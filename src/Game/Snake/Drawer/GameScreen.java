@@ -26,6 +26,7 @@ class GameScreen extends JPanel {
     private Image imageBackground = null;
     private Image imageBackgroundStart = null;
     private Image imageBackgroundDefault = null;
+    private Image imageSnakeDefault = null;
     private Image imageSnakeHead = null;
     private Image imageSnakeBody = null;
     private Image imageSnakeTurn = null;
@@ -102,6 +103,17 @@ class GameScreen extends JPanel {
                 } else
                     imageFood = null;
 
+                //SNAKE_DEFAULT
+                if (Config.SNAKE_DEFAULT_IMG != null && !Config.SNAKE_DEFAULT_IMG.equals("")) {
+                    try {
+                        imageSnakeDefault = ImageIO.read(new File(Config.SNAKE_DEFAULT_IMG));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    imageSnakeDefault = null;
+                }
+
                 //SNAKE_HEAD_IMG, SNAKE_BODY_IMG, SNAKE_TURN_IMG, SNAKE_TAIL_IMG
                 if (Config.SNAKE_HEAD_IMG != null) {
                     try {
@@ -128,19 +140,21 @@ class GameScreen extends JPanel {
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                switch (e.getKeyCode()) {
-                    case KeyEvent.VK_UP:
-                        ((Snake) getSnake()).turnUp();
-                        break;
-                    case KeyEvent.VK_DOWN:
-                        ((Snake) getSnake()).turnDown();
-                        break;
-                    case KeyEvent.VK_RIGHT:
-                        ((Snake) getSnake()).turnRight();
-                        break;
-                    case KeyEvent.VK_LEFT:
-                        ((Snake) getSnake()).turnLeft();
-                        break;
+                if (starting) {
+                    switch (e.getKeyCode()) {
+                        case KeyEvent.VK_UP:
+                            ((Snake) getSnake()).turnUp();
+                            break;
+                        case KeyEvent.VK_DOWN:
+                            ((Snake) getSnake()).turnDown();
+                            break;
+                        case KeyEvent.VK_RIGHT:
+                            ((Snake) getSnake()).turnRight();
+                            break;
+                        case KeyEvent.VK_LEFT:
+                            ((Snake) getSnake()).turnLeft();
+                            break;
+                    }
                 }
                 super.keyPressed(e);
             }
@@ -266,11 +280,15 @@ class GameScreen extends JPanel {
             //绘制对象名称 （SNAKE_HEAD, SNAKE_BODY, SNAKE_TAIL, SNAKE_TURN, FOOD或图片路径）
             //                          null 标识采用默认值(SNAKE_DEFAULT)+
             IMG = getImageByMethod(method);
-            if (IMG != null) {
-                graphics.drawImage(IMG, (int)r.getX(), (int)r.getY(), this);
+            if (IMG == null) {
+                if (Config.SNAKE_DEFAULT_IMG != null && !Config.SNAKE_DEFAULT_IMG.equals("")) {
+                    graphics.drawImage(imageSnakeDefault, (int)r.getX(), (int)r.getY(), this);
+                }else {
+                    graphics.draw(makeCircle(r));
+                }
                 continue;
             }
-            graphics.draw(makeCircle(r));
+            graphics.drawImage(IMG, (int) r.getX(), (int)r.getY(), this);
         }
 
         //绘制食物
@@ -281,10 +299,15 @@ class GameScreen extends JPanel {
             method = getFood().getDrawableArea().paintMethd.get(food_rect);
         IMG = getImageByMethod(method);
         if (IMG == null) {
-            Color c = graphics.getColor();
-            graphics.setColor(Color.yellow);
-            graphics.draw(makeCircle(food_rect));
-            graphics.setColor(c);
+            if (Config.FOOD_IMG != null && !Config.FOOD_IMG.equals("")) {
+                graphics.drawImage(imageFood, (int)food_rect.getX(), (int)food_rect.getY(), this);
+            }else {
+                Color c = graphics.getColor();
+                graphics.setColor(Color.yellow);
+                graphics.draw(makeCircle(food_rect));
+                graphics.setColor(c);
+            }
+
         }else {
             graphics.drawImage(IMG, (int)food_rect.getX(), (int)food_rect.getY(), this);
         }

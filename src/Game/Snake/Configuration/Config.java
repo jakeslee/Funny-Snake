@@ -47,7 +47,7 @@ public class Config {
     /*
     * 蛇身体每节长度
     * */
-    public static int SNAKE_BODY_WIDTH = 6;
+    public static int SNAKE_BODY_WIDTH = 8;
 
     /*
     * 蛇身体节数
@@ -87,7 +87,7 @@ public class Config {
     /*
     * 默认背景图片路径
     * */
-    public static String BACKGROUND_PATH_DEFAULT = "res/bg-1.jpg";
+    public static String BACKGROUND_PATH_DEFAULT = null;
 
     /*
     * 背景图片路径

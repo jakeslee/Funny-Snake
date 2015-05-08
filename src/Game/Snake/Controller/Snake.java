@@ -63,7 +63,19 @@ public interface Snake {
     * 用于数据更新的常量，Map<int, Object>
     *
     * CURRENT_LENGTH    当前长度
+    *
+    * DIRECTION_UP      方向为上
+    *
+    * DIRECTION_DOWN    方向为下
+    *
+    * DIRECTION_LEFT    方向为左
+    *
+    * DIRECTION_RIGHT   方向为右
     * */
     int CURRENT_LENGTH = 0;
+    char DIRECTION_UP = 'U';
+    char DIRECTION_DOWN = 'D';
+    char DIRECTION_LEFT = 'L';
+    char DIRECTION_RIGHT = 'R';
 }
 

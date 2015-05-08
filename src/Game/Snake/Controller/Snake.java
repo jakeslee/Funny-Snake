@@ -73,9 +73,9 @@ public interface Snake {
     * DIRECTION_RIGHT   方向为右
     * */
     int CURRENT_LENGTH = 0;
-    char DIRECTION_UP = 'U';
-    char DIRECTION_DOWN = 'D';
-    char DIRECTION_LEFT = 'L';
-    char DIRECTION_RIGHT = 'R';
+    byte DIRECTION_UP = (byte)0xF0;
+    byte DIRECTION_DOWN = (byte)0x0F;
+    byte DIRECTION_LEFT = (byte)0x3C;
+    byte DIRECTION_RIGHT = (byte)0xC3;
 }
 

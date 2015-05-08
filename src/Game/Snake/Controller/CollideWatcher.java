@@ -23,15 +23,12 @@ public class CollideWatcher {
     * 初始化计时器
     * */
     public CollideWatcher() {
-        timer = new Timer(Config.SNAKE_SPEED, new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                for (String lhs : watchers.keySet()){
-                    for (String rhs : watchers.keySet()){
-                        if (lhs.equals(rhs))
-                            continue;
-                        scan(lhs, rhs);
-                    }
+        timer = new Timer(Config.SNAKE_SPEED, e -> {
+            for (String lhs : watchers.keySet()){
+                for (String rhs : watchers.keySet()){
+                    if (lhs.equals(rhs))
+                        continue;
+                    scan(lhs, rhs);
                 }
             }
         });

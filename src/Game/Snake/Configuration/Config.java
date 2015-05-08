@@ -70,7 +70,22 @@ public class Config {
     public static Dimension VIEW_SIZE = new Dimension(SCREEN_SIZE.width, SCREEN_SIZE.height - CONTROL_BAR_HEIGHT);
 
     /*
+    * 背景色
+    * */
+    public static Color BACKGROUD_COLOR = Color.black;
+
+    /*
+    * 前景色
+    * */
+    public static Color FOREGROUD_COLOR = Color.white;
+
+    /*
     * 初始背景图片路径
+    * */
+    public static String BACKGROUND_PATH_START = "res/bg-1.jpg";
+
+    /*
+    * 默认背景图片路径
     * */
     public static String BACKGROUND_PATH_DEFAULT = "res/bg-1.jpg";
 

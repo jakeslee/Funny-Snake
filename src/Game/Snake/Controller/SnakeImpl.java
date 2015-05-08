@@ -91,17 +91,17 @@ public class SnakeImpl implements Snake, Collidedable, Drawable {
     * 检查边界，若越界则从对面一侧出来
     * */
     public void checkBound(SnakeNode node) {
-        if (node.body.x > Config.VIEW_SIZE.width) {
-            node.body.x = node.body.x % Config.VIEW_SIZE.width;
+        if (node.body.x + Config.SNAKE_BODY_WIDTH > Config.VIEW_SIZE.width) {
+            node.body.x = 0;
         }
-        if (node.body.y > Config.VIEW_SIZE.getHeight()) {
-            node.body.y = node.body.y % Config.VIEW_SIZE.height;
+        if (node.body.y + Config.SNAKE_BODY_WIDTH > Config.VIEW_SIZE.height) {
+            node.body.y = 0;
         }
         if (node.body.x < 0) {
-            node.body.x = node.body.x + Config.VIEW_SIZE.width;
+            node.body.x += Config.VIEW_SIZE.width;
         }
         if (node.body.y < 0) {
-            node.body.y = node.body.y + Config.VIEW_SIZE.height;
+            node.body.y += Config.VIEW_SIZE.height;
         }
     }
 

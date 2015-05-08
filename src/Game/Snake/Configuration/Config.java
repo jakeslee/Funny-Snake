@@ -58,7 +58,7 @@ public class Config {
     /*
     * 窗口大小
     * */
-    public static Dimension SCREEN_SIZE = new Dimension(795, 600);
+    public static Dimension SCREEN_SIZE = new Dimension(796, 600);
 
     /*
     * 控制面板的区域

@@ -255,9 +255,9 @@ class GameScreen extends JPanel {
         if (imageBackground != null) {
             graphics.drawImage(imageBackground, 0, 0, bg_width, bg_height, this);
         }else {
-            graphics.setColor(Color.black);
+            graphics.setColor(Config.BACKGROUD_COLOR);
             graphics.fillRect(0, 0, bg_width, bg_height);
-            graphics.setColor(Color.white);
+            graphics.setColor(Config.FOREGROUD_COLOR);
         }
 
         //绘制蛇身

@@ -10,24 +10,32 @@ import java.util.*;
  */
 public class FoodImpl implements Collidedable, Food, Drawable {
     private EventProcessListener eventProcessListener = null;
+    /*
+    * 定义食物座标
+    * */
     private int x, y;
+    /*
+    * 定义食物
+    * */
     private Rectangle food = null;
     private CollideWatcher watcher = null;
 
-    public FoodImpl(CollideWatcher watcher){
+    public FoodImpl(CollideWatcher watcher) {
         this.watcher = watcher;
         createLocation();
         food = CollideWatcher.generateRectangle(x,y);
     }
 
-    public FoodImpl() {
-    }
+    public FoodImpl() {}
 
-    public void createLocation(){
+    /*
+    * 创建食物座标
+    * */
+    public void createLocation() {
         Random random = new Random();
         do {
-            x = random.nextInt((int)Config.VIEW_SIZE.getWidth());
-            y = random.nextInt((int)Config.VIEW_SIZE.getHeight());
+            x = random.nextInt(Config.VIEW_SIZE.width);
+            y = random.nextInt(Config.VIEW_SIZE.height);
             y = y - y % Config.SNAKE_BODY_WIDTH;
             x = x - x % Config.SNAKE_BODY_WIDTH;
         }while (watcher.isCollidedWithExistence(CollideWatcher.generateRectangle(x, y)));
@@ -48,7 +56,7 @@ public class FoodImpl implements Collidedable, Food, Drawable {
 
     @Override
     public void collideWith(String identification) {
-        if (identification.equals(Snake.class.getName())){
+        if (identification.equals(Snake.class.getName())) {
             eventProcessListener.eventProcessing();
         }
     }

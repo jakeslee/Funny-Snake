@@ -48,7 +48,7 @@ public class Config {
     /*
     * 蛇身体每节长度
     * */
-    public static int SNAKE_BODY_WIDTH = 12;
+    public static int SNAKE_BODY_WIDTH = 15;
 
     /*
     * 蛇身体节数

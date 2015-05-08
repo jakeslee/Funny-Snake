@@ -200,7 +200,6 @@ class GameScreen extends JPanel {
         snake.setOnRefreshListener(new EventProcessAdapter() {
             @Override
             public void updateEvent(Object data) {
-                System.out.println("repaint");
                 repaint();
 
                 //响应数据更新事件
@@ -423,6 +422,5 @@ class GameScreen extends JPanel {
         }else {
             paintObject((Graphics2D) g);
         }
-        System.out.println("paintComponent");
     }
 }

@@ -26,8 +26,10 @@ public class DrawableRect {
     /*
     * 其它附加元信息
     *
-    * Snake可以添加 转角处的    Rectangle,
-    *              节长       Integer
+    * Map<String, Object>
+    *               String              Value Type      Comment
+    * Snake可以添加 转角处的(TURN_RECT)    Rectangle
+    *              节长(SNAKE_LENGTH)       Integer   通常不用设置，rectangles.size()就是蛇长
     *              ...
     * */
     public Object meta = null;

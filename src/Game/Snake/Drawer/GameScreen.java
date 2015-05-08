@@ -32,6 +32,8 @@ class GameScreen extends JPanel {
     private Image imageSnakeTail = null;
     private Image imageFood = null;
 
+    private Image viewBuffer = null;
+
     private Snake snake;
     private Food food;
     private CollideWatcher collideWatcher;
@@ -50,14 +52,17 @@ class GameScreen extends JPanel {
         collideWatcher = new CollideWatcher();
         snake = Factory.createSnake();
 
-        System.out.println(Snake.class.getName());
         /*
         * 蛇死亡事件处理
         * */
         snake.setDeathListener(new EventProcessAdapter() {
             @Override
             public void eventProcessing() {
+                //停止碰撞测试
+                collideWatcher.stop();
 
+                //发送停止信号
+                updateEventListener.updateEvent(true);
             }
         });
 
@@ -69,11 +74,17 @@ class GameScreen extends JPanel {
         * */
         snake.setOnRefreshListener(new EventProcessAdapter() {
             @Override
-            public void eventProcessing() {
+            public void updateEvent(Object data) {
+                System.out.println("repaint");
+                repaint();
 
+                //响应数据更新事件
+                String statusBar = "蛇身长度: " + getSnake().getDrawableArea().rectangles.size();
+                updateEventListener.updateEvent(statusBar);
             }
         });
         collideWatcher.add((Collidedable) snake);
+        collideWatcher.start();
 
         food = Factory.createFood();
 
@@ -230,7 +241,11 @@ class GameScreen extends JPanel {
         String method = null;
         Image IMG = null;
         for (Rectangle r : snake_rect) {
-            method = getSnake().getDrawableArea().paintMethd.get(r);
+            if (getSnake().getDrawableArea().paintMethd == null)
+                method = null;
+            else
+                method = getSnake().getDrawableArea().paintMethd.get(r);
+
             //绘制对象名称 （SNAKE_HEAD, SNAKE_BODY, SNAKE_TAIL, SNAKE_TURN, FOOD或图片路径）
             //                          null 标识采用默认值(SNAKE_DEFAULT)+
             IMG = getImageByMethod(method);
@@ -243,7 +258,10 @@ class GameScreen extends JPanel {
 
         //绘制食物
         Rectangle food_rect = getFood().getDrawableArea().rectangles.get(0);
-        method = getFood().getDrawableArea().paintMethd.get(food_rect);
+        if (getFood().getDrawableArea().paintMethd == null)
+            method = null;
+        else
+            method = getFood().getDrawableArea().paintMethd.get(food_rect);
         IMG = getImageByMethod(method);
         if (IMG == null) {
             Color c = graphics.getColor();
@@ -253,10 +271,6 @@ class GameScreen extends JPanel {
         }else {
             graphics.drawImage(IMG, (int)food_rect.getX(), (int)food_rect.getY(), this);
         }
-
-        //响应数据更新事件
-        String statusBar = "蛇身长度: " + getSnake().getDrawableArea().rectangles.size();
-        updateEventListener.updateEvent(statusBar);
     }
 
     /*
@@ -341,7 +355,18 @@ class GameScreen extends JPanel {
         this.updateEventListener = updateEventListener;
     }
 
+    @Override
+    public void update(Graphics g) {
+        if (viewBuffer == null) {
+            viewBuffer = this.createImage(getWidth(), getHeight());
+        }
+        Graphics graphics = viewBuffer.getGraphics();
 
+
+        g.drawImage(viewBuffer, 0, 0, null);
+        paint(graphics);
+        System.out.println("Paint_update");
+    }
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -354,8 +379,10 @@ class GameScreen extends JPanel {
                 g.fillRect(0, 0, this.getWidth(), this.getHeight());
                 g.setColor(c);
             }else
-                g.drawImage(imageBackground, 0, 0, this.getWidth(), this.getHeight(), this);
+                g.drawImage(imageBackgroundStart, 0, 0, this.getWidth(), this.getHeight(), this);
+        }else {
+            paintObject((Graphics2D) g);
         }
-
+        System.out.println("paintComponent");
     }
 }

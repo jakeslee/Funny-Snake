@@ -18,25 +18,32 @@ public class GameFrame extends JFrame {
 
     public GameFrame() throws HeadlessException {
         super("贪吃蛇 " + Config.VERSION);
+        JButton jButtonStart = new JButton("开始游戏");
         setSize(Config.SCREEN_SIZE);
         gameScreen = new GameScreen();
         gameScreen.setUpdateEventListener(new EventProcessAdapter() {
             @Override
             public void updateEvent(Object data) {
-                status.setText((String)data);
+                if (data instanceof String)
+                    status.setText((String)data);
+                else if (data instanceof Boolean) {
+                    jButtonStart.setText("开始游戏");
+                    gameScreen.stopGame();
+                }
             }
         });
 
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JButton jButtonStart = new JButton("开始游戏");
         jButtonStart.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (starting) {
+                    jButtonStart.setText("开始游戏");
                     gameScreen.stopGame();
                 } else {
+                    jButtonStart.setText("停止");
                     gameScreen.startGame();
                 }
                 starting = !starting;

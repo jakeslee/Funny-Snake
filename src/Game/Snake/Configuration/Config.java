@@ -3,6 +3,7 @@ package Game.Snake.Configuration;
 import Game.Snake.Controller.EventProcessListener;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -118,4 +119,9 @@ public class Config {
     * 食物图片路径
     * */
     public static String FOOD_IMG = null;
+
+    /*
+    * 设置蛇头起始位置
+    * */
+    public static Point START_POSITION = new Point(300,300);
 }

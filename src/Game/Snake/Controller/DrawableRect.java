@@ -11,7 +11,7 @@ public class DrawableRect {
     /*
     * 绘制区域
     * */
-    List<Rectangle> rectangles;
+    public List<Rectangle> rectangles;
 
     /*
     * 绘制方法，一般是图片元
@@ -21,14 +21,16 @@ public class DrawableRect {
     * key: 绘制区域     value:  绘制对象名称 （SNAKE_HEAD, SNAKE_BODY, SNAKE_TAIL, SNAKE_TURN, FOOD或图片路径）
     *                          null 标识采用默认值(SNAKE_DEFAULT)
     * */
-    Map<Rectangle, String> paintMethd = null;
+    public Map<Rectangle, String> paintMethd = null;
 
     /*
     * 其它附加元信息
     *
-    * Snake可以添加 转角处的    Rectangle,
-    *              节长       Integer
+    * Map<String, Object>
+    *               String              Value Type      Comment
+    * Snake可以添加 转角处的(TURN_RECT)    Rectangle
+    *              节长(SNAKE_LENGTH)       Integer   通常不用设置，rectangles.size()就是蛇长
     *              ...
     * */
-    Object meta = null;
+    public Object meta = null;
 }

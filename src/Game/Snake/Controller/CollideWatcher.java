@@ -23,12 +23,15 @@ public class CollideWatcher {
     * 初始化计时器
     * */
     public CollideWatcher() {
-        timer = new Timer(Config.SNAKE_SPEED, e -> {
-            for (String lhs : watchers.keySet()){
-                for (String rhs : watchers.keySet()){
-                    if (lhs.equals(rhs))
-                        continue;
-                    scan(lhs, rhs);
+        timer = new Timer(Config.SNAKE_SPEED, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                for (String lhs : watchers.keySet()) {
+                    for (String rhs : watchers.keySet()) {
+                        if (lhs.equals(rhs))
+                            continue;
+                        CollideWatcher.this.scan(lhs, rhs);
+                    }
                 }
             }
         });
@@ -80,6 +83,24 @@ public class CollideWatcher {
     * */
     public Object get(String identification) {
         return watchers.get(identification);
+    }
+
+    /*
+    * 判断与已存在的元素是否碰撞
+    *
+    * 参数: rectangle 用于碰撞比较的对象区域
+    *
+    * 返回值: 如果有碰撞则返回true，否则为false
+    * */
+    public boolean isCollidedWithExistence(Rectangle rectangle) {
+        for (Object o : watchers.values()) {
+            for (Rectangle r : ((Collidedable)o).getRectangles()) {
+                if (isCollided(r, rectangle)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     //Private Method

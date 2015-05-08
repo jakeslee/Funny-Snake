@@ -171,7 +171,7 @@ class GameScreen extends JPanel {
     * 创建Snake
     * */
     private void createSnake() {
-        snake = Factory.createSnake();
+        snake = Factory.createSnake(collideWatcher);
 
         /*
         * 蛇死亡事件处理
@@ -215,7 +215,7 @@ class GameScreen extends JPanel {
     * 创建Food
     * */
     private void createFood() {
-        food = Factory.createFood();
+        food = Factory.createFood(collideWatcher);
 
         /*
         * 食物被吃响应
@@ -225,7 +225,7 @@ class GameScreen extends JPanel {
         food.setEatenListener(new EventProcessAdapter() {
             @Override
             public void eventProcessing() {
-                food = Factory.createFood();
+                food = Factory.createFood(collideWatcher);
                 food.setEatenListener(this);
                 collideWatcher.set(Food.class.getName(), food);
             }

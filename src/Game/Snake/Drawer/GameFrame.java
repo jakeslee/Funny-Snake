@@ -19,13 +19,13 @@ public class GameFrame extends JFrame {
     public GameFrame() throws HeadlessException {
         super("贪吃蛇 " + Config.VERSION);
         JButton jButtonStart = new JButton("开始游戏");
-        setSize(Config.SCREEN_SIZE);
+
         gameScreen = new GameScreen();
         gameScreen.setUpdateEventListener(new EventProcessAdapter() {
             @Override
             public void updateEvent(Object data) {
                 if (data instanceof String)
-                    status.setText((String)data);
+                    status.setText((String) data);
                 else if (data instanceof Boolean) {
                     jButtonStart.setText("开始游戏");
                     starting = false;
@@ -35,7 +35,6 @@ public class GameFrame extends JFrame {
         gameScreen.setFocusable(true);
         gameScreen.requestFocusInWindow();
 
-        setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         jButtonStart.setFocusable(false);
@@ -63,10 +62,12 @@ public class GameFrame extends JFrame {
 
         status = new JLabel("蛇身长度: 5");
 
-        setLayout(new BorderLayout());
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(null);
+        setContentPane(mainPanel);
         JPanel controlPanel = new JPanel();
+        controlPanel.setBounds(0, 0, Config.SCREEN_SIZE.width, Config.CONTROL_BAR_HEIGHT);
         controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.X_AXIS));
-
         controlPanel.add(Box.createHorizontalStrut(10));
         controlPanel.add(status);
         controlPanel.add(Box.createGlue());
@@ -74,8 +75,13 @@ public class GameFrame extends JFrame {
         controlPanel.add(Box.createHorizontalStrut(10));
         controlPanel.add(jButtonExit);
 
-        add(controlPanel, BorderLayout.NORTH);
-        add(gameScreen);
+        gameScreen.setBounds(0, Config.CONTROL_BAR_HEIGHT, Config.VIEW_SIZE.width, Config.VIEW_SIZE.height);
+        mainPanel.add(controlPanel, BorderLayout.NORTH);
+        mainPanel.add(gameScreen);
+        mainPanel.setPreferredSize(Config.SCREEN_SIZE);
+        pack();
+
+        setLocationRelativeTo(null);
 
         Config.update();
     }

@@ -159,12 +159,6 @@ class GameScreen extends JPanel {
                 super.keyPressed(e);
             }
         });
-
-        /*
-        * 窗体配置
-        * */
-        setSize(Config.VIEW_SIZE);
-
     }
 
     /*
@@ -287,7 +281,7 @@ class GameScreen extends JPanel {
                 }
                 continue;
             }
-            graphics.drawImage(IMG, (int) r.getX(), (int)r.getY(), this);
+            graphics.drawImage(IMG, (int) r.getX(), (int) r.getY(), this);
         }
 
         //绘制食物

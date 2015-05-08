@@ -58,12 +58,12 @@ public class Config {
     /*
     * 窗口大小
     * */
-    public static Dimension SCREEN_SIZE = new Dimension(800, 600);
+    public static Dimension SCREEN_SIZE = new Dimension(795, 600);
 
     /*
     * 控制面板的区域
     * */
-    public static int CONTROL_BAR_HEIGHT = 29;
+    public static int CONTROL_BAR_HEIGHT = 30;
 
     /*
     * 绘制视口的区域

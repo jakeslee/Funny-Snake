@@ -28,7 +28,7 @@ public class GameFrame extends JFrame {
                     status.setText((String)data);
                 else if (data instanceof Boolean) {
                     jButtonStart.setText("开始游戏");
-                    gameScreen.stopGame();
+                    starting = false;
                 }
             }
         });

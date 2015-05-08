@@ -50,58 +50,8 @@ class GameScreen extends JPanel {
 
     public GameScreen() {
         collideWatcher = new CollideWatcher();
-        snake = Factory.createSnake();
-
-        /*
-        * 蛇死亡事件处理
-        * */
-        snake.setDeathListener(new EventProcessAdapter() {
-            @Override
-            public void eventProcessing() {
-                //停止碰撞测试
-                collideWatcher.stop();
-
-                //发送停止信号
-                updateEventListener.updateEvent(true);
-            }
-        });
-
-        /*
-        * 处理刷新事件
-        *
-        * 1. 重绘视口
-        * 2. 触发数据更新事件
-        * */
-        snake.setOnRefreshListener(new EventProcessAdapter() {
-            @Override
-            public void updateEvent(Object data) {
-                System.out.println("repaint");
-                repaint();
-
-                //响应数据更新事件
-                String statusBar = "蛇身长度: " + getSnake().getDrawableArea().rectangles.size();
-                updateEventListener.updateEvent(statusBar);
-            }
-        });
-        collideWatcher.add((Collidedable) snake);
-        collideWatcher.start();
-
-        food = Factory.createFood();
-
-        /*
-        * 食物被吃响应
-        *
-        * 产生新的食物
-        * */
-        food.setEatenListener(new EventProcessAdapter() {
-            @Override
-            public void eventProcessing() {
-                food = Factory.createFood();
-                food.setEatenListener(this);
-                collideWatcher.set(Food.class.getName(), food);
-            }
-        });
-        collideWatcher.add((Collidedable) food);
+        createSnake();
+        createFood();
 
         /*
         * 配置更新事件处理
@@ -204,11 +154,78 @@ class GameScreen extends JPanel {
     }
 
     /*
+    * 创建Snake
+    * */
+    private void createSnake() {
+        snake = Factory.createSnake();
+
+        /*
+        * 蛇死亡事件处理
+        * */
+        snake.setDeathListener(new EventProcessAdapter() {
+            @Override
+            public void eventProcessing() {
+                stopGame();
+                //停止碰撞测试
+                collideWatcher.stop();
+
+                //重新创建一个新的Snake
+                createSnake();
+
+                //发送停止信号
+                updateEventListener.updateEvent(true);
+            }
+        });
+
+        /*
+        * 处理刷新事件
+        *
+        * 1. 重绘视口
+        * 2. 触发数据更新事件
+        * */
+        snake.setOnRefreshListener(new EventProcessAdapter() {
+            @Override
+            public void updateEvent(Object data) {
+                System.out.println("repaint");
+                repaint();
+
+                //响应数据更新事件
+                String statusBar = "蛇身长度: " + getSnake().getDrawableArea().rectangles.size();
+                updateEventListener.updateEvent(statusBar);
+            }
+        });
+        collideWatcher.add((Collidedable) snake);
+    }
+
+    /*
+    * 创建Food
+    * */
+    private void createFood() {
+        food = Factory.createFood();
+
+        /*
+        * 食物被吃响应
+        *
+        * 产生新的食物
+        * */
+        food.setEatenListener(new EventProcessAdapter() {
+            @Override
+            public void eventProcessing() {
+                food = Factory.createFood();
+                food.setEatenListener(this);
+                collideWatcher.set(Food.class.getName(), food);
+            }
+        });
+        collideWatcher.add((Collidedable) food);
+    }
+
+    /*
     * 开始游戏处理函数
     * */
     public void startGame() {
         ((Snake)getSnake()).start();
         starting = true;
+        collideWatcher.start();
     }
 
     /*

@@ -96,6 +96,11 @@ public class Config {
     public static String BACKGROUND_PATH = null;
 
     /*
+    * 默认图片路径
+    * */
+    public static String SNAKE_DEFAULT_IMG = null;
+
+    /*
     * 蛇头图片路径
     * */
     public static String SNAKE_HEAD_IMG = null;

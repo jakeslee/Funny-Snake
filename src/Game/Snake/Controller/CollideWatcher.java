@@ -146,7 +146,9 @@ public class CollideWatcher {
     * 返回值: 相交则返回真
     * */
     public static boolean isCollided(Rectangle lhs, Rectangle rhs) {
-        return lhs.intersects(rhs);
+        Rectangle lhs_s = new Rectangle(lhs.x + 2, lhs.y + 2, Config.SNAKE_BODY_WIDTH - 4, Config.SNAKE_BODY_WIDTH - 4);
+        Rectangle rhs_s = new Rectangle(rhs.x + 2, rhs.y + 2, Config.SNAKE_BODY_WIDTH - 4, Config.SNAKE_BODY_WIDTH - 4);
+        return lhs_s.intersects(rhs_s);
     }
 
 }

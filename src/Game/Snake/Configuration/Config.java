@@ -54,6 +54,16 @@ public class Config {
             if (jsonObject.keySet().contains("CURRENT_MAP"))
                 CURRENT_MAP = jsonObject.getString("DEFAULT_MAP");
 
+            if (jsonObject.keySet().contains("DEFAULT_SHAPE"))
+                DEFAULT_SHAPE = jsonObject.getString("DEFAULT_SHAPE");
+
+            if (jsonObject.keySet().contains("SPEED_LEVELS")) {
+                LEVELS.clear();
+                JSONObject levels = jsonObject.getJSONObject("SPEED_LEVELS");
+                for (String key : levels.keySet())
+                    LEVELS.put(levels.getInt(key), key);
+            }
+
             loadMaps();
         }
     }
@@ -346,11 +356,33 @@ public class Config {
     * */
     public static Point START_POSITION = new Point(300,300);
 
+    /*
+    * 默认绘制形状
+    * */
+    public static String DEFAULT_SHAPE = "FILL-RECTANGLE";
+
+    /*
+    * 默认地图
+    * */
     public static String DEFAULT_MAP = null;
 
+    /*
+    * 当前地图
+    * */
     public static String CURRENT_MAP = null;
 
+    /*
+    * 地图路径
+    * */
     public static String MAP_DIRECTORY = "res/";
 
+    /*
+    * 地图列表
+    * */
     public static java.util.Map<String, Map> MAPS = new HashMap<>();
+
+    /*
+    * 速度等级
+    * */
+    public static java.util.Map<Integer, String> LEVELS = new HashMap<>();
 }

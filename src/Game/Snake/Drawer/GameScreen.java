@@ -6,16 +6,11 @@ import Game.Snake.Controller.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
-
 /**
  * Created by jakes on 15/5/6.
  */
@@ -32,6 +27,7 @@ class GameScreen extends JPanel {
     private Image imageSnakeTurn = null;
     private Image imageSnakeTail = null;
     private Image imageFood = null;
+    private Image imageWall = null;
 
     private Image viewBuffer = null;
 
@@ -60,6 +56,8 @@ class GameScreen extends JPanel {
         Config.addUpdateEventListener(new EventProcessAdapter() {
             @Override
             public void updateEvent(Object data) {
+                setSize(Config.VIEW_SIZE);
+
                 //BACKGROUND_PATH_START
                 if (Config.BACKGROUND_PATH_START != null && !Config.BACKGROUND_PATH_START.equals("")) {
                     try {
@@ -91,6 +89,23 @@ class GameScreen extends JPanel {
                     }
                 } else {
                     imageBackground = imageBackgroundDefault;
+                }
+
+                //WALL_IMG
+                if (Config.WALL_IMG != null) {
+                    try {
+                        imageWall = ImageIO.read(new File(Config.WALL_IMG));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else
+                    imageWall = null;
+
+                //WALL OBJ
+                if (Config.WALL == null) {
+                    collideWatcher.remove(Wall.class.getName());
+                } else {
+                    collideWatcher.add(Config.WALL);
                 }
 
                 //FOOD_IMG
@@ -140,23 +155,28 @@ class GameScreen extends JPanel {
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                if (starting) {
-                    switch (e.getKeyCode()) {
-                        case KeyEvent.VK_UP:
-                            ((Snake) getSnake()).turnUp();
-                            break;
-                        case KeyEvent.VK_DOWN:
-                            ((Snake) getSnake()).turnDown();
-                            break;
-                        case KeyEvent.VK_RIGHT:
-                            ((Snake) getSnake()).turnRight();
-                            break;
-                        case KeyEvent.VK_LEFT:
-                            ((Snake) getSnake()).turnLeft();
-                            break;
+                try {
+                    if (starting) {
+                        switch (e.getKeyCode()) {
+                            case KeyEvent.VK_UP:
+                                ((Snake) getSnake()).turnUp();
+                                break;
+                            case KeyEvent.VK_DOWN:
+                                ((Snake) getSnake()).turnDown();
+                                break;
+                            case KeyEvent.VK_RIGHT:
+                                ((Snake) getSnake()).turnRight();
+                                break;
+                            case KeyEvent.VK_LEFT:
+                                ((Snake) getSnake()).turnLeft();
+                                break;
+                        }
                     }
+                    super.keyPressed(e);
+                } catch (NullPointerException e1) {
+                    e1.printStackTrace();
                 }
-                super.keyPressed(e);
+
             }
         });
     }
@@ -260,49 +280,37 @@ class GameScreen extends JPanel {
             graphics.setColor(Config.FOREGROUD_COLOR);
         }
 
-        //绘制蛇身
-        java.util.List<Rectangle> snake_rect = getSnake().getDrawableArea().rectangles;
+
         String method = null;
         Image IMG = null;
-        for (Rectangle r : snake_rect) {
-            if (getSnake().getDrawableArea().paintMethd == null)
-                method = null;
-            else
-                method = getSnake().getDrawableArea().paintMethd.get(r);
+        for (Object o : collideWatcher.values()) {
+            Drawable drawable = (Drawable)o;
 
-            //绘制对象名称 （SNAKE_HEAD, SNAKE_BODY, SNAKE_TAIL, SNAKE_TURN, FOOD或图片路径）
-            //                          null 标识采用默认值(SNAKE_DEFAULT)+
-            IMG = getImageByMethod(method);
-            if (IMG == null) {
-                if (Config.SNAKE_DEFAULT_IMG != null && !Config.SNAKE_DEFAULT_IMG.equals("")) {
-                    graphics.drawImage(imageSnakeDefault, (int)r.getX(), (int)r.getY(), this);
+            for (Rectangle r : drawable.getDrawableArea().rectangles) {
+                Color toPaint = null;
+                if (drawable.getDrawableArea().paintMethd != null) {
+                    method = (String)drawable.getDrawableArea().paintMethd.get(r);
+                    IMG = getImageByMethod(method);
+                    if (IMG == null)
+                        toPaint = (Color)drawable.getDrawableArea().paintMethd.get(null);
                 }else {
-                    graphics.draw(makeCircle(r));
+                    IMG = null;
                 }
-                continue;
-            }
-            graphics.drawImage(IMG, (int) r.getX(), (int) r.getY(), this);
-        }
 
-        //绘制食物
-        Rectangle food_rect = getFood().getDrawableArea().rectangles.get(0);
-        if (getFood().getDrawableArea().paintMethd == null)
-            method = null;
-        else
-            method = getFood().getDrawableArea().paintMethd.get(food_rect);
-        IMG = getImageByMethod(method);
-        if (IMG == null) {
-            if (Config.FOOD_IMG != null && !Config.FOOD_IMG.equals("")) {
-                graphics.drawImage(imageFood, (int)food_rect.getX(), (int)food_rect.getY(), this);
-            }else {
-                Color c = graphics.getColor();
-                graphics.setColor(Color.yellow);
-                graphics.draw(makeCircle(food_rect));
-                graphics.setColor(c);
-            }
+                if (IMG == null) {
+                    Color c = graphics.getColor();
 
-        }else {
-            graphics.drawImage(IMG, (int)food_rect.getX(), (int)food_rect.getY(), this);
+                    if (toPaint == null)
+                        toPaint = Config.FOREGROUD_COLOR;
+
+                    graphics.setColor(toPaint);
+                    graphics.draw(r);
+                    //graphics.draw(makeDrawArea(r));
+                    graphics.setColor(c);
+                }else {
+                    graphics.drawImage(IMG, (int) r.getX(), (int) r.getY(), this);
+                }
+            }
         }
     }
 
@@ -332,6 +340,9 @@ class GameScreen extends JPanel {
                 case "FOOD":
                     IMG = imageFood;
                     break;
+                case "WALL":
+                    IMG = imageWall;
+                    break;
                 default:
                     try {
                         IMG = ImageIO.read(new File(method));
@@ -354,7 +365,8 @@ class GameScreen extends JPanel {
     *
     * 返回值: 返回圆对象
     * */
-    public Ellipse2D makeCircle(Rectangle r) {
+    //public Ellipse2D makeDrawArea(Rectangle r) {
+    public Ellipse2D makeDrawArea(Rectangle r) {
         double x = r.getX() + r.getWidth() / 2;
         double y = r.getY() + r.getHeight() / 2;
 
@@ -398,7 +410,7 @@ class GameScreen extends JPanel {
 
         g.drawImage(viewBuffer, 0, 0, null);
         paint(graphics);
-        System.out.println("Paint_update");
+
     }
 
     @Override

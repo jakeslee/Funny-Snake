@@ -18,6 +18,12 @@ public class GameFrame extends JFrame {
 
     public GameFrame() throws HeadlessException {
         super("贪吃蛇 " + Config.VERSION);
+        Config.loadConfig();
+        if (Config.CURRENT_MAP == null && Config.DEFAULT_MAP != null) {
+            Config.applyMap(Config.DEFAULT_MAP);
+        }else
+            Config.applyMap(Config.CURRENT_MAP);
+
         JButton jButtonStart = new JButton("开始游戏");
 
         gameScreen = new GameScreen();

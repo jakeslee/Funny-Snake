@@ -19,9 +19,10 @@ public class DrawableRect {
     * 可以为null，则采取默认绘制方式：第一个Rectangle为头，最后一个为尾，自动判断转角
     *
     * key: 绘制区域     value:  绘制对象名称 （SNAKE_HEAD, SNAKE_BODY, SNAKE_TAIL, SNAKE_TURN, FOOD或图片路径）
-    *                          null 标识采用默认值(SNAKE_DEFAULT)
+    *                          null (SNAKE_DEFAULT)
+    *     null          绘制颜色
     * */
-    public Map<Rectangle, String> paintMethd = null;
+    public Map<Rectangle, Object> paintMethd = null;
 
     /*
     * 其它附加元信息
@@ -29,7 +30,9 @@ public class DrawableRect {
     * Map<String, Object>
     *               String              Value Type      Comment
     * Snake可以添加 转角处的(TURN_RECT)    Rectangle
-    *              节长(SNAKE_LENGTH)       Integer   通常不用设置，rectangles.size()就是蛇长
+    *              节长(SNAKE_LENGTH)       Integer   通常不用设置，rectangles.size()
+    *
+    *              PAINT_COLOR          Color
     *              ...
     * */
     public Object meta = null;

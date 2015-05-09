@@ -40,6 +40,11 @@ public class SnakeImpl implements Snake, Collidedable, Drawable {
     private EventProcessListener death = null;
 
     /*
+    * 绘制方法
+    * */
+    private Map<Rectangle, Object> paintMethod = new HashMap<>();
+
+    /*
     * 设置刷新事件
     * */
     private EventProcessListener refresh = null;
@@ -58,6 +63,8 @@ public class SnakeImpl implements Snake, Collidedable, Drawable {
             snakeNodes.add(snakeNode);
         }
         head = snakeNodes.get(0);
+        paintMethod.put(head.body, "SNAKE_HEAD");
+
         /*
         * 计时器实例化，开始移动
         * */
@@ -75,10 +82,20 @@ public class SnakeImpl implements Snake, Collidedable, Drawable {
                     node.lastDirection = node.nextDirection;
                     node.nextDirection = snakeNodes.get(i - 1).lastDirection;
                 }
+
                 for (int i = 1; i < snakeNodes.size(); i++) {
+                    if (snakeNodes.get(i).nextDirection != snakeNodes.get(i).lastDirection) {
+                        paintMethod.put(snakeNodes.get(i).body, "SNAKE_TURN");
+                    }else if (i == snakeNodes.size() -1) {
+                        paintMethod.put(snakeNodes.get(i).body, "SNAKE_TAIL");
+                    }else {
+                        paintMethod.put(snakeNodes.get(i).body, "SNAKE_BODY");
+                    }
+
                     if (CollideWatcher.isCollided(head.body, snakeNodes.get(i).body)) {
                         stop();
                         death.eventProcessing();
+                        break;
                     }
                 }
                 refresh.updateEvent(null);
@@ -140,6 +157,9 @@ public class SnakeImpl implements Snake, Collidedable, Drawable {
             snakeNodes.add(s);
             refresh.eventProcessing();
         }else if (identification.equals(Snake.class.getName())) {
+            this.stop();
+            death.eventProcessing();
+        }else if (identification.equals(Wall.class.getName())) {
             this.stop();
             death.eventProcessing();
         }
@@ -216,7 +236,7 @@ public class SnakeImpl implements Snake, Collidedable, Drawable {
     public DrawableRect getDrawableArea() {
         DrawableRect drawableRect = new DrawableRect();
         drawableRect.rectangles = getSnakeRect();
-
+        drawableRect.paintMethd = paintMethod;
         return drawableRect;
     }
 }

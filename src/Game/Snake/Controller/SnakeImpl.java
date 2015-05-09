@@ -74,13 +74,17 @@ public class SnakeImpl implements Snake, Collidedable, Drawable {
                     checkBound(node);
                     node.lastDirection = node.nextDirection;
                     node.nextDirection = snakeNodes.get(i - 1).lastDirection;
-                }
-                for (int i = 1; i < snakeNodes.size(); i++) {
                     if (CollideWatcher.isCollided(head.body, snakeNodes.get(i).body)) {
                         stop();
                         death.eventProcessing();
                     }
                 }
+                /*for (int i = 1; i < snakeNodes.size(); i++) {
+                    if (CollideWatcher.isCollided(head.body, snakeNodes.get(i).body)) {
+                        stop();
+                        death.eventProcessing();
+                    }
+                }*/
                 refresh.updateEvent(null);
 
             }
@@ -99,9 +103,11 @@ public class SnakeImpl implements Snake, Collidedable, Drawable {
         }
         if (node.body.x < 0) {
             node.body.x += Config.VIEW_SIZE.width;
+            node.body.x -= node.body.x % Config.SNAKE_BODY_WIDTH;
         }
         if (node.body.y < 0) {
             node.body.y += Config.VIEW_SIZE.height;
+            node.body.y -= node.body.y % Config.SNAKE_BODY_WIDTH;
         }
     }
 

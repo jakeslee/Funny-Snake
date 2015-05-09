@@ -48,7 +48,6 @@ class GameScreen extends JPanel {
     public GameScreen() {
         collideWatcher = new CollideWatcher();
         createSnake();
-        createFood();
 
         /*
         * 配置更新事件处理
@@ -146,6 +145,8 @@ class GameScreen extends JPanel {
                     imageSnakeTail = null;
                 }
 
+                createSnake();
+                collideWatcher.reloadTimer();
             }
         });
 
@@ -251,6 +252,7 @@ class GameScreen extends JPanel {
     * 开始游戏处理函数
     * */
     public void startGame() {
+        createFood();
         ((Snake)getSnake()).start();
         starting = true;
         collideWatcher.start();
@@ -306,8 +308,6 @@ class GameScreen extends JPanel {
 
                     graphics.setColor(toPaint);
                     graphics.fillRect(r.x, r.y, r.width, r.height);
-                    //graphics.draw(r);
-                    //graphics.draw(makeDrawArea(r));
                     graphics.setColor(c);
                 }else {
                     if (r.width > Config.SNAKE_BODY_WIDTH || r.height > Config.SNAKE_BODY_WIDTH) {

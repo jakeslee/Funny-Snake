@@ -116,9 +116,11 @@ public class SnakeImpl implements Snake, Collidedable, Drawable {
         }
         if (node.body.x < 0) {
             node.body.x += Config.VIEW_SIZE.width;
+            node.body.x -= node.body.x % Config.SNAKE_BODY_WIDTH;
         }
         if (node.body.y < 0) {
             node.body.y += Config.VIEW_SIZE.height;
+            node.body.y -= node.body.y % Config.SNAKE_BODY_WIDTH;
         }
     }
 

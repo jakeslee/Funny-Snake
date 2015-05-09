@@ -21,13 +21,6 @@ public class GameFrame extends JFrame {
 
     public GameFrame() throws HeadlessException {
         super("贪吃蛇 " + Config.VERSION);
-        Config.addUpdateEventListener(new EventProcessAdapter() {
-            @Override
-            public void updateEvent(Object data) {
-                Config.SCREEN_SIZE.height = Config.VIEW_SIZE.height + Config.CONTROL_BAR_HEIGHT;
-                Config.SCREEN_SIZE.width = Config.VIEW_SIZE.width;
-            }
-        });
         Config.loadConfig();
         if (Config.CURRENT_MAP == null && Config.DEFAULT_MAP != null) {
             Config.applyMap(Config.DEFAULT_MAP);
@@ -42,7 +35,7 @@ public class GameFrame extends JFrame {
             @Override
             public void updateEvent(Object data) {
                 if (data instanceof String)
-                    status.setText((String) data  + "  |  当前速度等级: " + Config.LEVELS.get(Config.SNAKE_SPEED));
+                    status.setText((String) data + "  |  当前速度等级: " + Config.LEVELS.get(Config.SNAKE_SPEED));
                 else if (data instanceof Boolean) {
                     jButtonStart.setText("开始游戏");
                     starting = false;
@@ -93,10 +86,9 @@ public class GameFrame extends JFrame {
         setContentPane(mainPanel);
         JPanel controlPanel = new JPanel();
         controlPanel.setBounds(0, 0, Config.SCREEN_SIZE.width, Config.CONTROL_BAR_HEIGHT);
-        controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.X_AXIS));
-        controlPanel.add(Box.createHorizontalStrut(10));
+        controlPanel.setLayout(null);
+        status.setBounds(5, 0, Config.SCREEN_SIZE.width, Config.CONTROL_BAR_HEIGHT);
         controlPanel.add(status);
-        controlPanel.add(Box.createGlue());
 
         controlPanel.add(jButtonStart);
         controlPanel.add(setting);
@@ -127,6 +119,25 @@ public class GameFrame extends JFrame {
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+
+        Config.addUpdateEventListener(new EventProcessAdapter() {
+            @Override
+            public void updateEvent(Object data) {
+                jButtonStart.setText("开始游戏");
+                starting = false;
+                gameScreen.stopGame();
+                Config.SCREEN_SIZE.height = Config.VIEW_SIZE.height + Config.CONTROL_BAR_HEIGHT;
+                Config.SCREEN_SIZE.width = Config.VIEW_SIZE.width;
+
+                GameFrame.this.pack();
+                controlPanel.setBounds(0, 0, Config.SCREEN_SIZE.width, Config.CONTROL_BAR_HEIGHT);
+
+                jButtonExit.setBounds(Config.SCREEN_SIZE.width - 80, 0, 80, Config.CONTROL_BAR_HEIGHT);
+                setting.setBounds(Config.SCREEN_SIZE.width - 80 * 2, 0, 80, Config.CONTROL_BAR_HEIGHT);
+                jButtonStart.setBounds(Config.SCREEN_SIZE.width - 80 * 3, 0, 80, Config.CONTROL_BAR_HEIGHT);
+                GameFrame.this.setLocationRelativeTo(null);
+            }
+        });
 
         Config.update();
     }
@@ -169,6 +180,7 @@ class Setting extends JDialog {
                 for (int speed : Config.LEVELS.keySet()) {
                     if (Config.LEVELS.get(speed).equals(selectedLevel)) {
                         Config.SNAKE_SPEED = speed;
+                        Setting.this.setVisible(false);
                         break;
                     }
                 }

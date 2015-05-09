@@ -39,6 +39,13 @@ public class CollideWatcher {
     }
 
     /*
+    * 更新时钟周期
+    * */
+    public void reloadTimer() {
+        timer.setDelay(Config.SNAKE_SPEED);
+    }
+
+    /*
     * 启动碰撞监视
     * */
     public void start(){

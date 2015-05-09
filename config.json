@@ -1,0 +1,5 @@
+{
+	"SNAKE_BODY_WIDTH" : 15,
+	"DEFAULT_MAP" : "ditu",
+	"MAP_DIRECTORY" : "res/"
+}

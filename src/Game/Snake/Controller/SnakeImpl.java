@@ -63,7 +63,6 @@ public class SnakeImpl implements Snake, Collidedable, Drawable {
             snakeNodes.add(snakeNode);
         }
         head = snakeNodes.get(0);
-        paintMethod.put(head.body, "SNAKE_HEAD");
 
         /*
         * 计时器实例化，开始移动
@@ -82,6 +81,8 @@ public class SnakeImpl implements Snake, Collidedable, Drawable {
                     node.lastDirection = node.nextDirection;
                     node.nextDirection = snakeNodes.get(i - 1).lastDirection;
                 }
+
+                paintMethod.put(snakeNodes.get(0).body, "SNAKE_HEAD");
 
                 for (int i = 1; i < snakeNodes.size(); i++) {
                     if (snakeNodes.get(i).nextDirection != snakeNodes.get(i).lastDirection) {
@@ -155,6 +156,9 @@ public class SnakeImpl implements Snake, Collidedable, Drawable {
             Rectangle rect = CollideWatcher.generateRectangle(last.body.x, last.body.y);
             SnakeNode s =  new SnakeNode(rect, last.lastDirection, last.lastDirection);
             snakeMoving((byte) ~last.lastDirection, s);
+
+            paintMethod.put(last.body, "SNAKE_BODY");
+            paintMethod.put(s.body, "SNAKE_TAIL");
 
             snakeNodes.add(s);
             refresh.eventProcessing();

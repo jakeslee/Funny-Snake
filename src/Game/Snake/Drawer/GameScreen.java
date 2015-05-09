@@ -199,6 +199,7 @@ class GameScreen extends JPanel {
 
                 //重新创建一个新的Snake
                 createSnake();
+                createFood();
 
                 //发送停止信号
                 updateEventListener.updateEvent(true);
@@ -304,11 +305,20 @@ class GameScreen extends JPanel {
                         toPaint = Config.FOREGROUD_COLOR;
 
                     graphics.setColor(toPaint);
-                    graphics.draw(r);
+                    graphics.fillRect(r.x, r.y, r.width, r.height);
+                    //graphics.draw(r);
                     //graphics.draw(makeDrawArea(r));
                     graphics.setColor(c);
                 }else {
-                    graphics.drawImage(IMG, (int) r.getX(), (int) r.getY(), this);
+                    if (r.width > Config.SNAKE_BODY_WIDTH || r.height > Config.SNAKE_BODY_WIDTH) {
+                        for (int i = 0; i < r.width / Config.SNAKE_BODY_WIDTH; i++) {
+                            for (int j = 0; j < r.height / Config.SNAKE_BODY_WIDTH; j++) {
+                                graphics.drawImage(IMG, (int) r.x + i * Config.SNAKE_BODY_WIDTH,
+                                        (int) r.y + j * Config.SNAKE_BODY_WIDTH, this);
+                            }
+                        }
+                    }else
+                        graphics.drawImage(IMG, (int) r.getX(), (int) r.getY(), this);
                 }
             }
         }

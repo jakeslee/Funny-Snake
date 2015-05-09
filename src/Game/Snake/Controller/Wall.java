@@ -50,6 +50,9 @@ public class Wall implements Drawable, Collidedable {
         DrawableRect drawableRect = new DrawableRect();
         drawableRect.rectangles = rectangles;
         drawableRect.paintMethd = new HashMap<>();
+        for (Rectangle r : drawableRect.rectangles) {
+            drawableRect.paintMethd.put(r, "WALL");
+        }
         drawableRect.paintMethd.put(null, paint);
         drawableRect.meta = Wall.class.getName();
         return drawableRect;

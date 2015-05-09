@@ -173,11 +173,10 @@ class GameScreen extends JPanel {
                                 break;
                         }
                     }
-                    super.keyPressed(e);
                 } catch (NullPointerException e1) {
                     e1.printStackTrace();
                 }
-
+                super.keyPressed(e);
             }
         });
     }

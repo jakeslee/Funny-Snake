@@ -144,10 +144,10 @@ public class Config {
             startY = 0 - startY * SNAKE_BODY_WIDTH;
         START_POSITION = new Point(startX, startY);
         if (map.snake.getBoolean("MODE")) {
-            SNAKE_HEAD_IMG = MAP_DIRECTORY + File.separator + map.snake.getString("HEAD");
-            SNAKE_TURN_IMG = MAP_DIRECTORY + File.separator + map.snake.getString("TURN");
-            SNAKE_BODY_IMG = MAP_DIRECTORY + File.separator + map.snake.getString("BODY");
-            SNAKE_TAIL_IMG = MAP_DIRECTORY + File.separator + map.snake.getString("TAIL");
+            SNAKE_HEAD_IMG = MAP_DIRECTORY + mapName + File.separator + map.snake.getString("HEAD");
+            SNAKE_TURN_IMG = MAP_DIRECTORY + mapName + File.separator + map.snake.getString("TURN");
+            SNAKE_BODY_IMG = MAP_DIRECTORY + mapName + File.separator + map.snake.getString("BODY");
+            SNAKE_TAIL_IMG = MAP_DIRECTORY + mapName + File.separator + map.snake.getString("TAIL");
         }else {
             SNAKE_HEAD_IMG = null;
             SNAKE_TURN_IMG = null;
@@ -157,21 +157,21 @@ public class Config {
 
         //FOOD
         if (map.food.getBoolean("MODE")) {
-            FOOD_IMG = MAP_DIRECTORY + File.separator + map.food.getString("IMG");
+            FOOD_IMG = MAP_DIRECTORY + mapName + File.separator + map.food.getString("IMG");
         }else {
             FOOD_IMG = null;
         }
 
         //WALL
         if (map.wall.isMode()) {
-            WALL_IMG = MAP_DIRECTORY + File.separator + map.wall.getImg();
+            WALL_IMG = MAP_DIRECTORY + mapName + File.separator + map.wall.getImg();
         }else {
             WALL_IMG = null;
         }
 
         //VIEW
         if (map.view.getBoolean("MODE")) {
-            BACKGROUND_PATH = map.view.getString("IMG");
+            BACKGROUND_PATH = MAP_DIRECTORY + mapName + File.separator + map.view.getString("IMG");
         }else {
             BACKGROUND_PATH = null;
         }

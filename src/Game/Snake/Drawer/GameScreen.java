@@ -314,11 +314,13 @@ class GameScreen extends JPanel {
                         for (int i = 0; i < r.width / Config.SNAKE_BODY_WIDTH; i++) {
                             for (int j = 0; j < r.height / Config.SNAKE_BODY_WIDTH; j++) {
                                 graphics.drawImage(IMG, (int) r.x + i * Config.SNAKE_BODY_WIDTH,
-                                        (int) r.y + j * Config.SNAKE_BODY_WIDTH, this);
+                                        (int) r.y + j * Config.SNAKE_BODY_WIDTH,
+                                        Config.SNAKE_BODY_WIDTH, Config.SNAKE_BODY_WIDTH, this);
                             }
                         }
                     }else
-                        graphics.drawImage(IMG, (int) r.getX(), (int) r.getY(), this);
+                        graphics.drawImage(IMG, (int) r.getX(), (int) r.getY(),
+                                Config.SNAKE_BODY_WIDTH, Config.SNAKE_BODY_WIDTH, this);
                 }
             }
         }

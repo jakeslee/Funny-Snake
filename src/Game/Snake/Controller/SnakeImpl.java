@@ -49,6 +49,11 @@ public class SnakeImpl implements Snake, Collidedable, Drawable {
     * */
     private EventProcessListener refresh = null;
 
+    /*
+    * 缓冲方向
+    * */
+    private byte BUFFER_DIRECTION;
+
     public SnakeImpl() {}
 
     public SnakeImpl(CollideWatcher watcher) {
@@ -181,32 +186,45 @@ public class SnakeImpl implements Snake, Collidedable, Drawable {
         timer.stop();
     }
 
+    /*
+    * 检测方向是否冲突
+    * */
+    public void checkDirectionConflict(){
+        if (BUFFER_DIRECTION != ~head.lastDirection) {
+            head.nextDirection = BUFFER_DIRECTION;
+        }
+    }
+
     @Override
     public void turnLeft() {
         if (head.nextDirection != DIRECTION_RIGHT) {
-            head.nextDirection = DIRECTION_LEFT;
+            BUFFER_DIRECTION = DIRECTION_LEFT;
         }
+        checkDirectionConflict();
     }
 
     @Override
     public void turnRight() {
         if (head.nextDirection != DIRECTION_LEFT) {
-            head.nextDirection = DIRECTION_RIGHT;
+            BUFFER_DIRECTION = DIRECTION_RIGHT;
         }
+        checkDirectionConflict();
     }
 
     @Override
     public void turnUp() {
         if (head.nextDirection != DIRECTION_DOWN) {
-            head.nextDirection = DIRECTION_UP;
+            BUFFER_DIRECTION = DIRECTION_UP;
         }
+        checkDirectionConflict();
     }
 
     @Override
     public void turnDown() {
         if (head.nextDirection != DIRECTION_UP) {
-            head.nextDirection = DIRECTION_DOWN;
+            BUFFER_DIRECTION = DIRECTION_DOWN;
         }
+        checkDirectionConflict();
     }
 
     @Override

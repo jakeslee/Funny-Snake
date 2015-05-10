@@ -40,9 +40,19 @@ public class SnakeImpl implements Snake, Collidedable, Drawable {
     private EventProcessListener death = null;
 
     /*
+    * 绘制方法
+    * */
+    private Map<Rectangle, Object> paintMethod = new HashMap<>();
+
+    /*
     * 设置刷新事件
     * */
     private EventProcessListener refresh = null;
+
+    /*
+    * 缓冲方向
+    * */
+    private byte BUFFER_DIRECTION;
 
     public SnakeImpl() {}
 
@@ -58,6 +68,7 @@ public class SnakeImpl implements Snake, Collidedable, Drawable {
             snakeNodes.add(snakeNode);
         }
         head = snakeNodes.get(0);
+
         /*
         * 计时器实例化，开始移动
         * */
@@ -75,10 +86,22 @@ public class SnakeImpl implements Snake, Collidedable, Drawable {
                     node.lastDirection = node.nextDirection;
                     node.nextDirection = snakeNodes.get(i - 1).lastDirection;
                 }
+
+                paintMethod.put(snakeNodes.get(0).body, "SNAKE_HEAD");
+
                 for (int i = 1; i < snakeNodes.size(); i++) {
+                    if (snakeNodes.get(i).nextDirection != snakeNodes.get(i).lastDirection) {
+                        paintMethod.put(snakeNodes.get(i).body, "SNAKE_TURN");
+                    }else if (i == snakeNodes.size() -1) {
+                        paintMethod.put(snakeNodes.get(i).body, "SNAKE_TAIL");
+                    }else {
+                        paintMethod.put(snakeNodes.get(i).body, "SNAKE_BODY");
+                    }
+
                     if (CollideWatcher.isCollided(head.body, snakeNodes.get(i).body)) {
                         stop();
                         death.eventProcessing();
+                        break;
                     }
                 }
                 refresh.updateEvent(null);
@@ -99,9 +122,11 @@ public class SnakeImpl implements Snake, Collidedable, Drawable {
         }
         if (node.body.x < 0) {
             node.body.x += Config.VIEW_SIZE.width;
+            node.body.x -= node.body.x % Config.SNAKE_BODY_WIDTH;
         }
         if (node.body.y < 0) {
             node.body.y += Config.VIEW_SIZE.height;
+            node.body.y -= node.body.y % Config.SNAKE_BODY_WIDTH;
         }
     }
 
@@ -137,9 +162,15 @@ public class SnakeImpl implements Snake, Collidedable, Drawable {
             SnakeNode s =  new SnakeNode(rect, last.lastDirection, last.lastDirection);
             snakeMoving((byte) ~last.lastDirection, s);
 
+            paintMethod.put(last.body, "SNAKE_BODY");
+            paintMethod.put(s.body, "SNAKE_TAIL");
+
             snakeNodes.add(s);
             refresh.eventProcessing();
         }else if (identification.equals(Snake.class.getName())) {
+            this.stop();
+            death.eventProcessing();
+        }else if (identification.equals(Wall.class.getName())) {
             this.stop();
             death.eventProcessing();
         }
@@ -155,32 +186,45 @@ public class SnakeImpl implements Snake, Collidedable, Drawable {
         timer.stop();
     }
 
+    /*
+    * 检测方向是否冲突
+    * */
+    public void checkDirectionConflict(){
+        if (BUFFER_DIRECTION != ~head.lastDirection) {
+            head.nextDirection = BUFFER_DIRECTION;
+        }
+    }
+
     @Override
     public void turnLeft() {
         if (head.nextDirection != DIRECTION_RIGHT) {
-            head.nextDirection = DIRECTION_LEFT;
+            BUFFER_DIRECTION = DIRECTION_LEFT;
         }
+        checkDirectionConflict();
     }
 
     @Override
     public void turnRight() {
         if (head.nextDirection != DIRECTION_LEFT) {
-            head.nextDirection = DIRECTION_RIGHT;
+            BUFFER_DIRECTION = DIRECTION_RIGHT;
         }
+        checkDirectionConflict();
     }
 
     @Override
     public void turnUp() {
         if (head.nextDirection != DIRECTION_DOWN) {
-            head.nextDirection = DIRECTION_UP;
+            BUFFER_DIRECTION = DIRECTION_UP;
         }
+        checkDirectionConflict();
     }
 
     @Override
     public void turnDown() {
         if (head.nextDirection != DIRECTION_UP) {
-            head.nextDirection = DIRECTION_DOWN;
+            BUFFER_DIRECTION = DIRECTION_DOWN;
         }
+        checkDirectionConflict();
     }
 
     @Override
@@ -216,7 +260,7 @@ public class SnakeImpl implements Snake, Collidedable, Drawable {
     public DrawableRect getDrawableArea() {
         DrawableRect drawableRect = new DrawableRect();
         drawableRect.rectangles = getSnakeRect();
-
+        drawableRect.paintMethd = paintMethod;
         return drawableRect;
     }
 }

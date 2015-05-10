@@ -1,0 +1,14 @@
+{
+	"SNAKE_BODY_WIDTH" : 15,
+	"DEFAULT_SHAPE" : "FILL-RECTANGLE",
+	"DEFAULT_MAP" : "ditu",
+	"MAP_DIRECTORY" : "res/",
+	"DEFAULT_ICON" : "res/icon.png",
+	"SPEED_LEVELS" : {
+		"新手" : 500,
+		"普通" : 200,
+		"中级" : 150,
+		"高级" : 100,
+		"变态" : 50
+	}
+}

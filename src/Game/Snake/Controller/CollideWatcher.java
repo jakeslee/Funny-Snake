@@ -3,11 +3,12 @@ package Game.Snake.Controller;
 import Game.Snake.Configuration.Config;
 
 import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 
 
 /**
@@ -35,6 +36,13 @@ public class CollideWatcher {
                 }
             }
         });
+    }
+
+    /*
+    * 更新时钟周期
+    * */
+    public void reloadTimer() {
+        timer.setDelay(Config.SNAKE_SPEED);
     }
 
     /*
@@ -83,6 +91,19 @@ public class CollideWatcher {
     * */
     public Object get(String identification) {
         return watchers.get(identification);
+    }
+
+    /*
+    * 移除监视对象
+    *
+    * 参数: identification    对象的ID
+    * */
+    public Object remove(String identification) {
+        return watchers.remove(identification);
+    }
+
+    public Collection<Object> values() {
+        return watchers.values();
     }
 
     /*
@@ -146,7 +167,9 @@ public class CollideWatcher {
     * 返回值: 相交则返回真
     * */
     public static boolean isCollided(Rectangle lhs, Rectangle rhs) {
-        return lhs.intersects(rhs);
+        Rectangle lhs_s = new Rectangle(lhs.x + 2, lhs.y + 2, lhs.width - 4, lhs.height - 4);
+        Rectangle rhs_s = new Rectangle(rhs.x + 2, rhs.y + 2, rhs.width - 4, rhs.height - 4);
+        return lhs_s.intersects(rhs_s);
     }
 
 }

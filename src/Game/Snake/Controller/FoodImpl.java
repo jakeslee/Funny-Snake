@@ -10,20 +10,29 @@ import java.util.*;
  */
 public class FoodImpl implements Collidedable, Food, Drawable {
     private EventProcessListener eventProcessListener = null;
+
     /*
     * 定义食物座标
     * */
     private int x, y;
+
     /*
     * 定义食物
     * */
     private Rectangle food = null;
     private CollideWatcher watcher = null;
 
+    /*
+    * 绘制方法
+    * */
+    private Map<Rectangle, Object> paintMethod = new HashMap<>();
+
+
     public FoodImpl(CollideWatcher watcher) {
         this.watcher = watcher;
         createLocation();
         food = CollideWatcher.generateRectangle(x,y);
+        paintMethod.put(food, "FOOD");
     }
 
     public FoodImpl() {}
@@ -77,6 +86,7 @@ public class FoodImpl implements Collidedable, Food, Drawable {
     public DrawableRect getDrawableArea() {
         DrawableRect drawableRect = new DrawableRect();
         drawableRect.rectangles = getRectangles();
+        drawableRect.paintMethd = paintMethod;
         return drawableRect;
     }
 }

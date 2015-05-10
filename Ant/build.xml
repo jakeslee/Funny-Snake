@@ -13,12 +13,19 @@
                 icon="psds/icon.icns"
                 displayname="贪吃蛇"
                 identifier="asia.gkc.FunnySnake"
-                shortversion="0.6.9 (725569)"
+                shortversion="0.7.0 (3c0191)"
+                copyright="Copyright Jakes &amp; lhwarthas, (c) 2015"
                 applicationCategory="public.app-category.developer-tools"
                 mainclassname="Game.Snake.Drawer.Main">
             <classpath file="out/artifacts/Snake_Game_jar/Snake Game.jar" />
             <option value="-Duser.dir=$APP_ROOT/Contents/Resources"/>
         </bundleapp>
+        <copy todir="Ant/dist/FunnySnake.app/Contents/Resources">
+            <fileset dir="." >
+                <include name="res/"/>
+                <include name="config.json"/>
+            </fileset>
+        </copy>
     </target>
 
 </project>

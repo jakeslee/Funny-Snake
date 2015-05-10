@@ -1,0 +1,29 @@
+{
+    "WALL" : {
+        "MODE": true,
+        "IMG" : "food.png",
+        "RECT": [
+        [0, 0, -53, -1]
+        ]
+    },
+    "SNAKE" : {
+        "MODE" : true,
+        "INIT" : [-10, -10],
+        "HEAD" : "food.png",
+        "TURN" : "food.png",
+        "BODY" : "food.png",
+        "TAIL" : "food.png"
+    },
+    "FOOD" : {
+        "MODE": true,
+        "IMG" : "food.png"
+    },
+    "VIEW" : {
+        "MODE": false,
+        "LHW" : 15,
+        "IMG" : [39, 40, 34, 1],
+        "RECT": [-32, -15],
+        "BG_COLOR": [0, 0, 0, 1],
+        "FG_COLOR": [255, 255, 255, 1]
+    }
+}

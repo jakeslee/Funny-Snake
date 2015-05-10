@@ -148,7 +148,6 @@ public class GameFrame extends JFrame {
 
                 //ICON
                 if (Config.DEFAULT_ICON != null && !Config.DEFAULT_ICON.equals("")) {
-                    System.out.println(Config.DEFAULT_ICON);
                     GameFrame.this.setIconImage(new ImageIcon(Config.DEFAULT_ICON).getImage());
                 }
             }
@@ -172,7 +171,7 @@ class Setting extends JDialog {
         JPanel about = new JPanel();
         about.setLayout(new BoxLayout(about, BoxLayout.X_AXIS));
         JLabel icon = new JLabel(new ImageIcon("res/icon-64.png"));
-        JLabel msg = new JLabel("<html><center>关于</center><br>作者: 李日翔，刘海威<br>历时4天</html>", JLabel.CENTER);
+        JLabel msg = new JLabel("<html><center>关于</center><br>作者: 李日翔，刘海威<br>历时5天</html>", JLabel.CENTER);
         about.add(Box.createHorizontalStrut(30));
         about.add(icon);
         about.add(msg);

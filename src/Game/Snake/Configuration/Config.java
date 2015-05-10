@@ -57,6 +57,9 @@ public class Config {
             if (jsonObject.keySet().contains("DEFAULT_SHAPE"))
                 DEFAULT_SHAPE = jsonObject.getString("DEFAULT_SHAPE");
 
+            if (jsonObject.keySet().contains("DEFAULT_ICON"))
+                DEFAULT_ICON = jsonObject.getString("DEFAULT_ICON");
+
             if (jsonObject.keySet().contains("SPEED_LEVELS")) {
                 LEVELS.clear();
                 JSONObject levels = jsonObject.getJSONObject("SPEED_LEVELS");
@@ -355,6 +358,11 @@ public class Config {
     * 设置蛇头起始位置
     * */
     public static Point START_POSITION = new Point(300,300);
+
+    /*
+    * 程序图标
+    * */
+    public static String DEFAULT_ICON = "res/icon.png";
 
     /*
     * 默认绘制形状

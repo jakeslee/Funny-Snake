@@ -21,6 +21,7 @@ public class GameFrame extends JFrame {
 
     public GameFrame() throws HeadlessException {
         super("贪吃蛇 " + Config.VERSION);
+
         Config.loadConfig();
         if (Config.CURRENT_MAP == null && Config.DEFAULT_MAP != null) {
             Config.applyMap(Config.DEFAULT_MAP);
@@ -31,17 +32,18 @@ public class GameFrame extends JFrame {
         JButton setting = new JButton("设置");
 
         gameScreen = new GameScreen();
+        gameScreen.setDoubleBuffered(true);
         gameScreen.setUpdateEventListener(new EventProcessAdapter() {
             @Override
             public void updateEvent(Object data) {
                 if (data instanceof Integer)
                     status.setText("当前得分: " +
-                            (((Integer) data).intValue() - Config.SNAKE_LENGTH) * (1000/Config.SNAKE_SPEED) +
-                                    "  |  当前速度等级: " + Config.LEVELS.get(Config.SNAKE_SPEED));
+                            (((Integer) data).intValue() - Config.SNAKE_LENGTH) * (1000 / Config.SNAKE_SPEED) +
+                            "  |  当前速度等级: " + Config.LEVELS.get(Config.SNAKE_SPEED));
                 else if (data instanceof Boolean) {
                     if (((Boolean) data).booleanValue() == true) {
                         JOptionPane.showMessageDialog(GameFrame.this.getContentPane(),
-                                "小蛇死咯~！", "提示", JOptionPane.INFORMATION_MESSAGE);
+                                "小蛇死咯~！", "提示", JOptionPane.INFORMATION_MESSAGE, new ImageIcon("res/icon-64.png"));
                         jButtonStart.setText("开始游戏");
                         starting = false;
                     }
@@ -116,6 +118,7 @@ public class GameFrame extends JFrame {
         });
 
 
+
         gameScreen.setBounds(0, Config.CONTROL_BAR_HEIGHT, Config.VIEW_SIZE.width, Config.VIEW_SIZE.height);
         mainPanel.add(controlPanel, BorderLayout.NORTH);
         mainPanel.add(gameScreen);
@@ -142,6 +145,12 @@ public class GameFrame extends JFrame {
                 setting.setBounds(Config.SCREEN_SIZE.width - 80 * 2, 0, 80, Config.CONTROL_BAR_HEIGHT);
                 jButtonStart.setBounds(Config.SCREEN_SIZE.width - 80 * 3, 0, 80, Config.CONTROL_BAR_HEIGHT);
                 GameFrame.this.setLocationRelativeTo(null);
+
+                //ICON
+                if (Config.DEFAULT_ICON != null && !Config.DEFAULT_ICON.equals("")) {
+                    System.out.println(Config.DEFAULT_ICON);
+                    GameFrame.this.setIconImage(new ImageIcon(Config.DEFAULT_ICON).getImage());
+                }
             }
         });
 
@@ -154,11 +163,20 @@ class Setting extends JDialog {
         super(owner);
         setTitle("设置");
         setModal(true);
-        setSize(300, 230);
+        setSize(300, 300);
         setLocationRelativeTo(owner);
         JPanel content = new JPanel();
         setContentPane(content);
         setLayout(null);
+
+        JPanel about = new JPanel();
+        about.setLayout(new BoxLayout(about, BoxLayout.X_AXIS));
+        JLabel icon = new JLabel(new ImageIcon("res/icon-64.png"));
+        JLabel msg = new JLabel("<html><center>关于</center><br>作者: 李日翔，刘海威<br>历时4天</html>", JLabel.CENTER);
+        about.add(Box.createHorizontalStrut(30));
+        about.add(icon);
+        about.add(msg);
+        about.setBounds(10, 10, getWidth() - 20, 70);
 
         JPanel setMap = new JPanel();
         setMap.setBorder(BorderFactory.createTitledBorder("设置当前地图"));
@@ -168,7 +186,7 @@ class Setting extends JDialog {
         JComboBox mapList = new JComboBox(maps);
         setMap.add(new JLabel("选择地图："));
         setMap.add(mapList);
-        setMap.setBounds(10, 10, getWidth() - 20, 70);
+        setMap.setBounds(10, 90, getWidth() - 20, 70);
         mapList.setSelectedItem(Config.CURRENT_MAP);
 
         JPanel setSpeed = new JPanel();
@@ -178,7 +196,7 @@ class Setting extends JDialog {
         JComboBox levelCom = new JComboBox(levels);
         levelCom.setSelectedItem(Config.LEVELS.get(Config.SNAKE_SPEED));
         setSpeed.add(levelCom);
-        setSpeed.setBounds(10, 90, getWidth() - 20, 70);
+        setSpeed.setBounds(10, 170, getWidth() - 20, 70);
 
         JButton apply = new JButton("应用");
         apply.addActionListener(new ActionListener() {
@@ -200,11 +218,13 @@ class Setting extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Setting.this.setVisible(false);
+                dispose();
             }
         });
-        apply.setBounds(150, 170, 70, 25);
-        cancel.setBounds(220, 170, 70, 25);
+        apply.setBounds(150, 245, 70, 25);
+        cancel.setBounds(220, 245, 70, 25);
 
+        content.add(about);
         content.add(setMap);
         content.add(setSpeed);
         content.add(apply);

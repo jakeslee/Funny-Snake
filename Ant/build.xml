@@ -13,7 +13,7 @@
                 icon="psds/icon.icns"
                 displayname="贪吃蛇"
                 identifier="asia.gkc.FunnySnake"
-                shortversion="0.6.8 (bc547f)"
+                shortversion="0.6.9 (725569)"
                 applicationCategory="public.app-category.developer-tools"
                 mainclassname="Game.Snake.Drawer.Main">
             <classpath file="out/artifacts/Snake_Game_jar/Snake Game.jar" />

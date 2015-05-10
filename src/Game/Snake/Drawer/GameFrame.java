@@ -43,7 +43,8 @@ public class GameFrame extends JFrame {
                 else if (data instanceof Boolean) {
                     if (((Boolean) data).booleanValue() == true) {
                         JOptionPane.showMessageDialog(GameFrame.this.getContentPane(),
-                                "小蛇死咯~！", "提示", JOptionPane.INFORMATION_MESSAGE, new ImageIcon("res/icon-64.png"));
+                                "小蛇死咯~！", "提示", JOptionPane.INFORMATION_MESSAGE,
+                                new ImageIcon(Config.buildPath("res/icon-64.png")));
                         jButtonStart.setText("开始游戏");
                         starting = false;
                     }
@@ -170,7 +171,7 @@ class Setting extends JDialog {
 
         JPanel about = new JPanel();
         about.setLayout(new BoxLayout(about, BoxLayout.X_AXIS));
-        JLabel icon = new JLabel(new ImageIcon("res/icon-64.png"));
+        JLabel icon = new JLabel(new ImageIcon(Config.buildPath("res/icon-64.png")));
         JLabel msg = new JLabel("<html><center>关于</center><br>作者: 李日翔，刘海威<br>历时5天</html>", JLabel.CENTER);
         about.add(Box.createHorizontalStrut(30));
         about.add(icon);

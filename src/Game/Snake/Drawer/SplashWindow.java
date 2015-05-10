@@ -50,13 +50,13 @@ public class SplashWindow extends JWindow {
         setLocationRelativeTo(null);
 
         // 增加一个鼠标事件处理器，如果用户用鼠标点击了欢迎屏幕，则关闭。
-        addMouseListener(new MouseAdapter() {
+/*        addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
                 closeEvent.eventProcessing();
                 setVisible(false);
                 dispose();
             }
-        });
+        });*/
 
         final int pause = waitTime;
         /**

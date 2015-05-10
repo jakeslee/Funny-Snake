@@ -51,6 +51,9 @@ public class Config {
             if (jsonObject.keySet().contains("MAP_DIRECTORY"))
                 MAP_DIRECTORY = jsonObject.getString("MAP_DIRECTORY");
 
+            if (jsonObject.keySet().contains("BACKGROUND_PATH_START"))
+                BACKGROUND_PATH_START = jsonObject.getString("BACKGROUND_PATH_START");
+
             if (jsonObject.keySet().contains("CURRENT_MAP"))
                 CURRENT_MAP = jsonObject.getString("DEFAULT_MAP");
 

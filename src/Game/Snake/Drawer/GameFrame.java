@@ -34,11 +34,17 @@ public class GameFrame extends JFrame {
         gameScreen.setUpdateEventListener(new EventProcessAdapter() {
             @Override
             public void updateEvent(Object data) {
-                if (data instanceof String)
-                    status.setText((String) data + "  |  当前速度等级: " + Config.LEVELS.get(Config.SNAKE_SPEED));
+                if (data instanceof Integer)
+                    status.setText("当前得分: " +
+                            (((Integer) data).intValue() - Config.SNAKE_LENGTH) * (1000/Config.SNAKE_SPEED) +
+                                    "  |  当前速度等级: " + Config.LEVELS.get(Config.SNAKE_SPEED));
                 else if (data instanceof Boolean) {
-                    jButtonStart.setText("开始游戏");
-                    starting = false;
+                    if (((Boolean) data).booleanValue() == true) {
+                        JOptionPane.showMessageDialog(GameFrame.this.getContentPane(),
+                                "小蛇死咯~！", "提示", JOptionPane.INFORMATION_MESSAGE);
+                        jButtonStart.setText("开始游戏");
+                        starting = false;
+                    }
                 }
             }
         });
@@ -163,12 +169,14 @@ class Setting extends JDialog {
         setMap.add(new JLabel("选择地图："));
         setMap.add(mapList);
         setMap.setBounds(10, 10, getWidth() - 20, 70);
+        mapList.setSelectedItem(Config.CURRENT_MAP);
 
         JPanel setSpeed = new JPanel();
         setSpeed.setBorder(BorderFactory.createTitledBorder("设置游戏等级"));
         Vector<String> levels = new Vector<>(Config.LEVELS.values());
         setSpeed.add(new JLabel("选择玩家等级："));
         JComboBox levelCom = new JComboBox(levels);
+        levelCom.setSelectedItem(Config.LEVELS.get(Config.SNAKE_SPEED));
         setSpeed.add(levelCom);
         setSpeed.setBounds(10, 90, getWidth() - 20, 70);
 

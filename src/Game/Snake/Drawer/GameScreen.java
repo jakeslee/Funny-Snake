@@ -155,6 +155,11 @@ class GameScreen extends JPanel {
         * */
         addKeyListener(new KeyAdapter() {
             @Override
+            public void keyReleased(KeyEvent e) {
+                super.keyReleased(e);
+            }
+
+            @Override
             public void keyPressed(KeyEvent e) {
                 try {
                     if (starting) {
@@ -203,6 +208,7 @@ class GameScreen extends JPanel {
 
                 //发送停止信号
                 updateEventListener.updateEvent(true);
+                repaint();
             }
         });
 
@@ -218,8 +224,7 @@ class GameScreen extends JPanel {
                 repaint();
 
                 //响应数据更新事件
-                String statusBar = "蛇身长度: " + getSnake().getDrawableArea().rectangles.size();
-                updateEventListener.updateEvent(statusBar);
+                updateEventListener.updateEvent(getSnake().getDrawableArea().rectangles.size());
             }
         });
         collideWatcher.add((Collidedable) snake);

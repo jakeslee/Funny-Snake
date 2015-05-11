@@ -1,15 +1,11 @@
 package Game.Snake.Configuration;
 
-import Game.Snake.Controller.CollideWatcher;
 import Game.Snake.Controller.EventProcessListener;
 import Game.Snake.Controller.Wall;
 import Game.Snake.Drawer.Map;
-import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.awt.*;
-import java.awt.geom.Point2D;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,8 +34,12 @@ public class Config {
             e.updateEvent(null);
     }
 
+    public static String buildPath(String path) {
+        return Config.PWD + File.separator + path;
+    }
+
     public static void loadConfig() {
-        String content = readFile("config.json");
+        String content = readFile(buildPath("config.json"));
         if (!content.equals("")) {
             JSONObject jsonObject = new JSONObject(content);
             if (jsonObject.keySet().contains("SNAKE_BODY_WIDTH"))
@@ -49,10 +49,10 @@ public class Config {
                 DEFAULT_MAP = jsonObject.getString("DEFAULT_MAP");
 
             if (jsonObject.keySet().contains("MAP_DIRECTORY"))
-                MAP_DIRECTORY = jsonObject.getString("MAP_DIRECTORY");
+                MAP_DIRECTORY = buildPath(jsonObject.getString("MAP_DIRECTORY"));
 
             if (jsonObject.keySet().contains("BACKGROUND_PATH_START"))
-                BACKGROUND_PATH_START = jsonObject.getString("BACKGROUND_PATH_START");
+                BACKGROUND_PATH_START = buildPath(jsonObject.getString("BACKGROUND_PATH_START"));
 
             if (jsonObject.keySet().contains("CURRENT_MAP"))
                 CURRENT_MAP = jsonObject.getString("DEFAULT_MAP");
@@ -61,7 +61,7 @@ public class Config {
                 DEFAULT_SHAPE = jsonObject.getString("DEFAULT_SHAPE");
 
             if (jsonObject.keySet().contains("DEFAULT_ICON"))
-                DEFAULT_ICON = jsonObject.getString("DEFAULT_ICON");
+                DEFAULT_ICON = buildPath(jsonObject.getString("DEFAULT_ICON"));
 
             if (jsonObject.keySet().contains("SPEED_LEVELS")) {
                 LEVELS.clear();
@@ -396,4 +396,6 @@ public class Config {
     * 速度等级
     * */
     public static java.util.Map<Integer, String> LEVELS = new HashMap<>();
+
+    public static String PWD = null;
 }

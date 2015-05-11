@@ -1,5 +1,6 @@
 package Game.Snake.Drawer;
 
+import Game.Snake.Configuration.Config;
 import Game.Snake.Controller.EventProcessAdapter;
 
 import javax.imageio.ImageIO;
@@ -15,6 +16,13 @@ import java.net.URL;
  */
 public class Main {
     public static void main(String[] args) {
+        try {
+            Config.PWD = new File(".").getCanonicalPath();
+            System.setProperty("user.dir", new File(".").getCanonicalPath());
+            System.out.println(Config.PWD + "用户的当前工作目录:/n"+System.getProperty("user.dir"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 displayJFrame();
@@ -23,10 +31,11 @@ public class Main {
     }
 
     public static void displayJFrame() {
+
         GameFrame gameFrame = new GameFrame();
-        gameFrame.setIconImage(new ImageIcon("res/icon.png").getImage());
+        gameFrame.setIconImage(new ImageIcon(Config.buildPath("res/icon.png")).getImage());
         try {
-            Image image = ImageIO.read(new File("res/start-img.jpg"));
+            Image image = ImageIO.read(new File(Config.buildPath("res/start-img.jpg")));
             SplashWindow splash = new SplashWindow(image, gameFrame,
                     3000);
             splash.setCloseEvent(new EventProcessAdapter() {

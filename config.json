@@ -3,7 +3,7 @@
 	"DEFAULT_SHAPE" : "FILL-RECTANGLE",
 	"DEFAULT_MAP" : "ditu",
 	"MAP_DIRECTORY" : "res/",
-	"BACKGROUND_PATH_START" : "res/bg-desktop.png",
+	"BACKGROUND_PATH_START" : "res/bg-desktop.jpg",
 	"DEFAULT_ICON" : "res/icon.png",
 	"SPEED_LEVELS" : {
 		"新手" : 500,

@@ -18,8 +18,6 @@ public class Main {
     public static void main(String[] args) {
         try {
             Config.PWD = new File(".").getCanonicalPath();
-            System.setProperty("user.dir", new File(".").getCanonicalPath());
-            System.out.println(Config.PWD + "用户的当前工作目录:/n"+System.getProperty("user.dir"));
         } catch (IOException e) {
             e.printStackTrace();
         }

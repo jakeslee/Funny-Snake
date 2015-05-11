@@ -1,7 +1,7 @@
 {
 	"SNAKE_BODY_WIDTH" : 15,
 	"DEFAULT_SHAPE" : "FILL-RECTANGLE",
-	"DEFAULT_MAP" : "ditu",
+	"DEFAULT_MAP" : "map1",
 	"MAP_DIRECTORY" : "res/",
 	"BACKGROUND_PATH_START" : "res/bg-desktop.jpg",
 	"DEFAULT_ICON" : "res/icon.png",

@@ -11,6 +11,9 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.Ellipse2D;
 import java.io.File;
 import java.io.IOException;
+import java.util.*;
+import java.util.Map;
+
 /**
  * Created by jakes on 15/5/6.
  */
@@ -25,6 +28,10 @@ class GameScreen extends JPanel {
     private Image imageSnakeHead = null;
     private Image imageSnakeBody = null;
     private Image imageSnakeTurn = null;
+    private Image imageSnakeTurnLU = null;
+    private Image imageSnakeTurnRU = null;
+    private Image imageSnakeTurnLD = null;
+    private Image imageSnakeTurnRD = null;
     private Image imageSnakeTail = null;
     private Image imageFood = null;
     private Image imageWall = null;
@@ -133,7 +140,14 @@ class GameScreen extends JPanel {
                     try {
                         imageSnakeHead = ImageIO.read(new File(Config.SNAKE_HEAD_IMG));
                         imageSnakeBody = ImageIO.read(new File(Config.SNAKE_BODY_IMG));
-                        imageSnakeTurn = ImageIO.read(new File(Config.SNAKE_TURN_IMG));
+                        if (Config.SNAKE_TURN_IMG != null)
+                            imageSnakeTurn = ImageIO.read(new File(Config.SNAKE_TURN_IMG));
+                        else if (Config.SNAKE_TURN_LU_IMG != null) {
+                            imageSnakeTurnLU = ImageIO.read(new File(Config.SNAKE_TURN_LU_IMG));
+                            imageSnakeTurnRU = ImageIO.read(new File(Config.SNAKE_TURN_RU_IMG));
+                            imageSnakeTurnLD = ImageIO.read(new File(Config.SNAKE_TURN_LD_IMG));
+                            imageSnakeTurnRD = ImageIO.read(new File(Config.SNAKE_TURN_RD_IMG));
+                        }
                         imageSnakeTail = ImageIO.read(new File(Config.SNAKE_TAIL_IMG));
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -298,8 +312,19 @@ class GameScreen extends JPanel {
                 if (drawable.getDrawableArea().paintMethd != null) {
                     method = (String)drawable.getDrawableArea().paintMethd.get(r);
                     IMG = getImageByMethod(method);
-                    if (IMG == null)
-                        toPaint = (Color)drawable.getDrawableArea().paintMethd.get(null);
+                    if (IMG == null) {
+                        if (drawable.getDrawableArea().meta instanceof java.util.Map<?, ?>) {
+
+                            for (Object object :((Map) drawable.getDrawableArea().meta).values()) {
+                                if (object instanceof Color) {
+                                    toPaint = (Color) ((Map) drawable.getDrawableArea().meta).get(r);
+                                }
+                                break;
+                            }
+                        }else {
+                            toPaint = (Color)drawable.getDrawableArea().paintMethd.get(null);
+                        }
+                    }
                 }else {
                     IMG = null;
                 }
@@ -352,6 +377,18 @@ class GameScreen extends JPanel {
                     break;
                 case "SNAKE_TURN":
                     IMG = imageSnakeTurn;
+                    break;
+                case "SNAKE_TURN_LU":
+                    IMG = imageSnakeTurnLU;
+                    break;
+                case "SNAKE_TURN_RU":
+                    IMG = imageSnakeTurnRU;
+                    break;
+                case "SNAKE_TURN_LD":
+                    IMG = imageSnakeTurnLD;
+                    break;
+                case "SNAKE_TURN_RD":
+                    IMG = imageSnakeTurnRD;
                     break;
                 case "FOOD":
                     IMG = imageFood;

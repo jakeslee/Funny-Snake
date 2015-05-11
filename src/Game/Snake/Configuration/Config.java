@@ -4,6 +4,7 @@ import Game.Snake.Controller.EventProcessListener;
 import Game.Snake.Controller.Wall;
 import Game.Snake.Drawer.Map;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import java.awt.*;
 import java.io.*;
@@ -38,7 +39,7 @@ public class Config {
         return Config.PWD + File.separator + path;
     }
 
-    public static void loadConfig() {
+    public static void loadConfig() throws JSONException{
         String content = readFile(buildPath("config.json"));
         if (!content.equals("")) {
             JSONObject jsonObject = new JSONObject(content);
@@ -84,8 +85,16 @@ public class Config {
                     String mapInfo = readFile(item.getPath() + File.separator + "info.json");
                     if (!mapInfo.equals("")) {
                         String mapName = item.getName();
+
                         JSONObject jsonObject = new JSONObject(mapInfo);
                         Map map = new Map();
+
+                        /*
+                        * FORMAT
+                        * */
+                        if (jsonObject.has("FORMAT")) {
+                            map.format = jsonObject.getInt("FORMAT");
+                        }
 
                         /*
                         * WALL
@@ -150,63 +159,121 @@ public class Config {
         Map map = MAPS.get(mapName);
         SNAKE_BODY_WIDTH = map.view.getInt("LHW");
 
-        //SNAKE
-        JSONArray startPosition = map.snake.getJSONArray("INIT");
-        int startX = startPosition.getInt(0);
-        int startY = startPosition.getInt(1);
-        if (startX < 0)
-            startX = 0 - startX * SNAKE_BODY_WIDTH;
-        if (startY < 0)
-            startY = 0 - startY * SNAKE_BODY_WIDTH;
-        START_POSITION = new Point(startX, startY);
-        if (map.snake.getBoolean("MODE")) {
-            SNAKE_HEAD_IMG = MAP_DIRECTORY + mapName + File.separator + map.snake.getString("HEAD");
-            SNAKE_TURN_IMG = MAP_DIRECTORY + mapName + File.separator + map.snake.getString("TURN");
-            SNAKE_BODY_IMG = MAP_DIRECTORY + mapName + File.separator + map.snake.getString("BODY");
-            SNAKE_TAIL_IMG = MAP_DIRECTORY + mapName + File.separator + map.snake.getString("TAIL");
-        }else {
-            SNAKE_HEAD_IMG = null;
-            SNAKE_TURN_IMG = null;
-            SNAKE_BODY_IMG = null;
-            SNAKE_TAIL_IMG = null;
+        try {
+            //SNAKE
+            JSONArray startPosition = map.snake.getJSONArray("INIT");
+            int startX = startPosition.getInt(0);
+            int startY = startPosition.getInt(1);
+            if (startX < 0)
+                startX = 0 - startX * SNAKE_BODY_WIDTH;
+            if (startY < 0)
+                startY = 0 - startY * SNAKE_BODY_WIDTH;
+            START_POSITION = new Point(startX, startY);
+            if (map.snake.getBoolean("MODE")) {
+                SNAKE_HEAD_IMG = MAP_DIRECTORY + mapName + File.separator + map.snake.getString("HEAD");
+
+
+                //Map format > 1.0
+                if (map.format > 1.0) {
+                    JSONArray arrayTurn = map.snake.optJSONArray("TURN");
+
+                    if (arrayTurn != null && arrayTurn.length() == 4 && arrayTurn.optString(0) != null) {
+                        SNAKE_TURN_LU_IMG = MAP_DIRECTORY + mapName + File.separator + arrayTurn.getString(0);
+                        SNAKE_TURN_RU_IMG = MAP_DIRECTORY + mapName + File.separator + arrayTurn.getString(1);
+                        SNAKE_TURN_LD_IMG = MAP_DIRECTORY + mapName + File.separator + arrayTurn.getString(2);
+                        SNAKE_TURN_RD_IMG = MAP_DIRECTORY + mapName + File.separator + arrayTurn.getString(3);
+                    }else {
+                        SNAKE_TURN_IMG = MAP_DIRECTORY + mapName + File.separator + map.snake.getString("TURN");
+                    }
+                }//endif format > 1.0
+
+                SNAKE_BODY_IMG = MAP_DIRECTORY + mapName + File.separator + map.snake.getString("BODY");
+                SNAKE_TAIL_IMG = MAP_DIRECTORY + mapName + File.separator + map.snake.getString("TAIL");
+            }else {
+                SNAKE_HEAD_IMG = null;
+                SNAKE_TURN_IMG = null;
+                SNAKE_TURN_LU_IMG = null;
+                SNAKE_TURN_RU_IMG = null;
+                SNAKE_TURN_LD_IMG = null;
+                SNAKE_TURN_RD_IMG = null;
+                SNAKE_BODY_IMG = null;
+                SNAKE_TAIL_IMG = null;
+
+                //load colors - map format > 1.0
+                if (map.format > 1.0) {
+                    JSONArray colors = map.snake.getJSONArray("HEAD");
+
+                    SNAKE_HEAD_COLOR = makeRGBA(colors.getInt(0), colors.getInt(1),
+                            colors.getInt(2), colors.getDouble(3));
+                    colors = map.snake.getJSONArray("BODY");
+                    SNAKE_BODY_COLOR = makeRGBA(colors.getInt(0), colors.getInt(1),
+                            colors.getInt(2), colors.getDouble(3));
+                    colors = map.snake.getJSONArray("TAIL");
+                    SNAKE_TAIL_COLOR = makeRGBA(colors.getInt(0), colors.getInt(1),
+                            colors.getInt(2), colors.getDouble(3));
+
+                    JSONArray arrayTurn = map.snake.getJSONArray("TURN");
+
+                    if (arrayTurn.length() == 4 && arrayTurn.optJSONArray(0) != null) {
+                        colors = arrayTurn.getJSONArray(0);
+                        SNAKE_TURN_LU_COLOR = makeRGBA(colors.getInt(0), colors.getInt(1),
+                                colors.getInt(2), colors.getDouble(3));
+                        colors = arrayTurn.getJSONArray(1);
+                        SNAKE_TURN_RU_COLOR =  makeRGBA(colors.getInt(0), colors.getInt(1),
+                                colors.getInt(2), colors.getDouble(3));
+                        colors = arrayTurn.getJSONArray(2);
+                        SNAKE_TURN_LD_COLOR =  makeRGBA(colors.getInt(0), colors.getInt(1),
+                                colors.getInt(2), colors.getDouble(3));
+                        colors = arrayTurn.getJSONArray(3);
+                        SNAKE_TURN_RD_COLOR = makeRGBA(colors.getInt(0), colors.getInt(1),
+                                colors.getInt(2), colors.getDouble(3));
+                    }else {
+                        colors = map.snake.getJSONArray("TURN");
+                        SNAKE_TURN_COLOR = makeRGBA(colors.getInt(0),colors.getInt(1),
+                                colors.getInt(2), colors.getDouble(3));
+                    }
+                }//endif format > 1.0
+            }
+
+            //FOOD
+            if (map.food.getBoolean("MODE")) {
+                FOOD_IMG = MAP_DIRECTORY + mapName + File.separator + map.food.getString("IMG");
+            }else {
+                FOOD_IMG = null;
+            }
+
+            //WALL
+            if (map.wall.isMode()) {
+                WALL_IMG = MAP_DIRECTORY + mapName + File.separator + map.wall.getImg();
+            }else {
+                WALL_IMG = null;
+            }
+
+            //VIEW
+            if (map.view.getBoolean("MODE")) {
+                BACKGROUND_PATH = MAP_DIRECTORY + mapName + File.separator + map.view.getString("IMG");
+            }else {
+                BACKGROUND_PATH = null;
+            }
+
+            JSONArray colorArray = map.view.getJSONArray("BG_COLOR");
+            BACKGROUD_COLOR = makeRGBA(colorArray.getInt(0),colorArray.getInt(1),
+                    colorArray.getInt(2), colorArray.getDouble(3));
+            colorArray = map.view.getJSONArray("FG_COLOR");
+            FOREGROUD_COLOR = makeRGBA(colorArray.getInt(0),colorArray.getInt(1),
+                    colorArray.getInt(2), colorArray.getDouble(3));
+
+            JSONArray viewRect = map.view.getJSONArray("RECT");
+            int view_width = viewRect.getInt(0);
+            int view_height = viewRect.getInt(1);
+            if (view_width < 0)
+                view_width = 0 - view_width * SNAKE_BODY_WIDTH;
+            if (view_height < 0)
+                view_height = 0 - view_height * SNAKE_BODY_WIDTH;
+            VIEW_SIZE = new Dimension(view_width, view_height);
+        }catch (JSONException e) {
+            e.printStackTrace();
         }
-
-        //FOOD
-        if (map.food.getBoolean("MODE")) {
-            FOOD_IMG = MAP_DIRECTORY + mapName + File.separator + map.food.getString("IMG");
-        }else {
-            FOOD_IMG = null;
-        }
-
-        //WALL
-        if (map.wall.isMode()) {
-            WALL_IMG = MAP_DIRECTORY + mapName + File.separator + map.wall.getImg();
-        }else {
-            WALL_IMG = null;
-        }
-
-        //VIEW
-        if (map.view.getBoolean("MODE")) {
-            BACKGROUND_PATH = MAP_DIRECTORY + mapName + File.separator + map.view.getString("IMG");
-        }else {
-            BACKGROUND_PATH = null;
-        }
-
-        JSONArray colorArray = map.view.getJSONArray("BG_COLOR");
-        BACKGROUD_COLOR = makeRGBA(colorArray.getInt(0),colorArray.getInt(1),
-                colorArray.getInt(2), colorArray.getDouble(3));
-        colorArray = map.view.getJSONArray("FG_COLOR");
-        FOREGROUD_COLOR = makeRGBA(colorArray.getInt(0),colorArray.getInt(1),
-                colorArray.getInt(2), colorArray.getDouble(3));
-
-        JSONArray viewRect = map.view.getJSONArray("RECT");
-        int view_width = viewRect.getInt(0);
-        int view_height = viewRect.getInt(1);
-        if (view_width < 0)
-            view_width = 0 - view_width * SNAKE_BODY_WIDTH;
-        if (view_height < 0)
-            view_height = 0 - view_height * SNAKE_BODY_WIDTH;
-        VIEW_SIZE = new Dimension(view_width, view_height);
 
         WALL = map.wall;
 
@@ -338,6 +405,26 @@ public class Config {
     public static String SNAKE_TURN_IMG = null;
 
     /*
+    * 蛇转向图片路径
+    * */
+    public static String SNAKE_TURN_LU_IMG = null;
+
+    /*
+    * 蛇转向图片路径
+    * */
+    public static String SNAKE_TURN_RU_IMG = null;
+
+    /*
+    * 蛇转向图片路径
+    * */
+    public static String SNAKE_TURN_LD_IMG = null;
+
+    /*
+    * 蛇转向图片路径
+    * */
+    public static String SNAKE_TURN_RD_IMG = null;
+
+    /*
     * 蛇尾图片路径
     * */
     public static String SNAKE_TAIL_IMG = null;
@@ -346,6 +433,51 @@ public class Config {
     * 食物图片路径
     * */
     public static String FOOD_IMG = null;
+
+    /*
+    * 蛇头颜色
+    * */
+    public static Color SNAKE_HEAD_COLOR = null;
+
+    /*
+    * 蛇身颜色
+    * */
+    public static Color SNAKE_BODY_COLOR= null;
+
+    /*
+    * 蛇转向颜色
+    * */
+    public static Color SNAKE_TURN_COLOR = null;
+
+    /*
+    * 蛇转向颜色
+    * */
+    public static Color SNAKE_TURN_LU_COLOR = null;
+
+    /*
+    * 蛇转向颜色
+    * */
+    public static Color SNAKE_TURN_RU_COLOR = null;
+
+    /*
+    * 蛇转向颜色
+    * */
+    public static Color SNAKE_TURN_LD_COLOR = null;
+
+    /*
+    * 蛇转向颜色
+    * */
+    public static Color SNAKE_TURN_RD_COLOR = null;
+
+    /*
+    * 蛇尾颜色
+    * */
+    public static Color SNAKE_TAIL_COLOR = null;
+
+    /*
+    * 食物颜色
+    * */
+    public static Color FOOD_COLOR= null;
 
     /*
     * 墙图片路径

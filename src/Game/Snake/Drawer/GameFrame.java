@@ -41,7 +41,7 @@ public class GameFrame extends JFrame {
                             (((Integer) data).intValue() - Config.SNAKE_LENGTH) * (1000 / Config.SNAKE_SPEED) +
                             "  |  当前速度等级: " + Config.LEVELS.get(Config.SNAKE_SPEED));
                 else if (data instanceof Boolean) {
-                    if (((Boolean) data).booleanValue() == true) {
+                    if (((Boolean) data).booleanValue() == true && starting) {
                         JOptionPane.showMessageDialog(GameFrame.this.getContentPane(),
                                 "小蛇死咯~！", "提示", JOptionPane.INFORMATION_MESSAGE,
                                 new ImageIcon(Config.buildPath("res/icon-64.png")));

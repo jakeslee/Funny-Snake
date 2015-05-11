@@ -5,7 +5,7 @@
             classname="com.oracle.appbundler.AppBundlerTask"
             classpath="ant/lib/appbundler-1.0.jar" />
 
-    <property file="Ant/build.properties"/>
+    <property file="ant/build.properties"/>
 
     <target name="generateVersion">
         <exec executable="${basedir}/version.sh" failonerror="true">
@@ -19,6 +19,7 @@
     </target>
 
     <target name="bundle">
+        <mkdir dir="${outputDir}"/>
         <bundleapp
                 outputdirectory="${outputDir}"
                 name="${appName}"

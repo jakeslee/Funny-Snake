@@ -1,8 +1,8 @@
 {
     "FORMAT" : 1.0,
     "WALL" : {
-        "MODE": false,                  
-        "IMG" : [253, 193, 65, 1],  
+        "MODE": true,                  
+        "IMG" : "WALL.png",  
         "RECT": [
             [0, 0, -53, -1],
             [0, -1, -1, -39],
@@ -11,26 +11,23 @@
         ]
     },
     "SNAKE" : {
-        "MODE" : false,         
+        "MODE" : true,         
         "INIT" : [-10, -10],
-        "HEAD" : [252, 96, 97, 1],   
-        "TURN" : [
-                [113, 113, 112, 1],    
-                [113, 113, 112, 1],  
-                [113, 113, 112, 1],    
-                [113, 113, 112, 1]],   
-        "BODY" : [52, 200, 73, 1],     
-        "TAIL" : [44, 196, 248, 1]   
+        "HEAD" : "HEAD.png",   
+        "TURN" : 
+                "TURN_LU.png",   
+        "BODY" : "BODY.png",     
+        "TAIL" : "TAIL.png"   
     },
     "FOOD" : {
-        "MODE": false,                
-        "IMG" : [229, 89, 83, 1]     
+        "MODE": true,                
+        "IMG" : "FOOD.png"     
     },
     "VIEW" : {
-        "MODE": false,        
+        "MODE": true,        
         "LHW" : 15,
         "SHAPE" : "FILL-RECTANGLE",   
-        "IMG" : [39, 40, 34, 1],  
+        "IMG" : "bg.png",  
         "RECT": [-53, -40],
         "BG_COLOR": [0, 0, 0, 1],
         "FG_COLOR": [255, 255, 255, 1]

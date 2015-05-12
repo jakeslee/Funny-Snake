@@ -29,6 +29,9 @@ class GameScreen extends JPanel {
     private Image imageBackgroundDefault = null;
     private Image imageSnakeDefault = null;
     private Image imageSnakeHead = null;
+    private Image imageSnakeHeadUp = null;
+    private Image imageSnakeHeadDown = null;
+    private Image imageSnakeHeadRight = null;
     private Image imageSnakeBody = null;
     private Image imageSnakeTurn = null;
     private Image imageSnakeTurnLU = null;
@@ -36,6 +39,9 @@ class GameScreen extends JPanel {
     private Image imageSnakeTurnLD = null;
     private Image imageSnakeTurnRD = null;
     private Image imageSnakeTail = null;
+    private Image imageSnakeTailUp = null;
+    private Image imageSnakeTailDown = null;
+    private Image imageSnakeTailRight = null;
     private Image imageFood = null;
     private Image imageWall = null;
 
@@ -143,6 +149,10 @@ class GameScreen extends JPanel {
                     try {
 
                         imageSnakeHead = ImageIO.read(new File(Config.SNAKE_HEAD_IMG));
+                        imageSnakeHeadUp = rotateImage(toBufferedImage(imageSnakeHead), 90);
+                        imageSnakeHeadDown = rotateImage(toBufferedImage(imageSnakeHead), -90);
+                        imageSnakeHeadRight = rotateImage(toBufferedImage(imageSnakeHead), 180);
+
                         imageSnakeBody = ImageIO.read(new File(Config.SNAKE_BODY_IMG));
                         if (Config.SNAKE_TURN_IMG != null)
                             imageSnakeTurn = ImageIO.read(new File(Config.SNAKE_TURN_IMG));
@@ -153,7 +163,10 @@ class GameScreen extends JPanel {
                             imageSnakeTurnRD = ImageIO.read(new File(Config.SNAKE_TURN_RD_IMG));
                         }
                         imageSnakeTail = ImageIO.read(new File(Config.SNAKE_TAIL_IMG));
-                    } catch (IOException e) {
+                        imageSnakeTailUp = rotateImage(toBufferedImage(imageSnakeTail), 90);
+                        imageSnakeTailDown = rotateImage(toBufferedImage(imageSnakeTail), -90);
+                        imageSnakeTailRight = rotateImage(toBufferedImage(imageSnakeTail), 180);
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 } else {
@@ -298,7 +311,8 @@ class GameScreen extends JPanel {
         int bg_width = Config.VIEW_SIZE.width;
         int bg_height = Config.VIEW_SIZE.height;
         if (imageBackground != null) {
-            graphics.drawImage(imageBackground, 0, 0, bg_width, bg_height, this);
+            graphics.drawImage(imageBackground.getScaledInstance(bg_width, bg_height, Image.SCALE_SMOOTH),
+                    0, 0, bg_width, bg_height, this);
         }else {
             graphics.setColor(Config.BACKGROUD_COLOR);
             graphics.fillRect(0, 0, bg_width, bg_height);
@@ -377,16 +391,19 @@ class GameScreen extends JPanel {
         if (method != null) {
             switch (method) {
                 case "SNAKE_HEAD_UP":
-                    IMG = rotateImage(toBufferedImage(imageSnakeHead), 90);
+                    //IMG = rotateImage(toBufferedImage(imageSnakeHead), 90);
+                    IMG = imageSnakeHeadUp;
                     break;
                 case "SNAKE_HEAD_DOWN":
-                    IMG = rotateImage(toBufferedImage(imageSnakeHead), -90);
+                    //IMG = rotateImage(toBufferedImage(imageSnakeHead), -90);
+                    IMG = imageSnakeHeadDown;
                     break;
                 case "SNAKE_HEAD_LEFT":
                     IMG = imageSnakeHead;
                     break;
                 case "SNAKE_HEAD_RIGHT":
-                    IMG = rotateImage(toBufferedImage(imageSnakeHead), 180);
+                    //IMG = rotateImage(toBufferedImage(imageSnakeHead), 180);
+                    IMG = imageSnakeHeadRight;
                     break;
                 case "SNAKE_BODY":
                     IMG = imageSnakeBody;
@@ -395,16 +412,19 @@ class GameScreen extends JPanel {
                     IMG = imageSnakeTail;
                     break;
                 case "SNAKE_TAIL_UP":
-                    IMG = rotateImage(toBufferedImage(imageSnakeTail), 90);
+                    //IMG = rotateImage(toBufferedImage(imageSnakeTail), 90);
+                    IMG = imageSnakeTailUp;
                     break;
                 case "SNAKE_TAIL_DOWN":
-                    IMG = rotateImage(toBufferedImage(imageSnakeTail), -90);;
+                    //IMG = rotateImage(toBufferedImage(imageSnakeTail), -90);
+                    IMG = imageSnakeTailDown;
                     break;
                 case "SNAKE_TAIL_LEFT":
                     IMG = imageSnakeTail;
                     break;
                 case "SNAKE_TAIL_RIGHT":
-                    IMG = rotateImage(toBufferedImage(imageSnakeTail), 180);;
+                    //IMG = rotateImage(toBufferedImage(imageSnakeTail), 180);
+                    IMG = imageSnakeTailRight;
                     break;
                 case "SNAKE_TURN":
                     IMG = imageSnakeTurn;

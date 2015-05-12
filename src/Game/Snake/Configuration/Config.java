@@ -74,6 +74,9 @@ public class Config {
             if (jsonObject.keySet().contains("DEFAULT_ICON"))
                 DEFAULT_ICON = buildPath(jsonObject.getString("DEFAULT_ICON"));
 
+            if (jsonObject.keySet().contains("DEFAULT_SHAPE"))
+                DEFAULT_SHAPE = buildPath(jsonObject.getString("DEFAULT_SHAPE"));
+
             if (jsonObject.keySet().contains("SPEED_LEVELS")) {
                 LEVELS.clear();
                 JSONObject levels = jsonObject.getJSONObject("SPEED_LEVELS");
@@ -275,11 +278,18 @@ public class Config {
             }
 
             JSONArray colorArray = map.view.getJSONArray("BG_COLOR");
-            BACKGROUD_COLOR = makeRGBA(colorArray.getInt(0),colorArray.getInt(1),
+            BACKGROUD_COLOR = makeRGBA(colorArray.getInt(0), colorArray.getInt(1),
                     colorArray.getInt(2), colorArray.getDouble(3));
             colorArray = map.view.getJSONArray("FG_COLOR");
             FOREGROUD_COLOR = makeRGBA(colorArray.getInt(0),colorArray.getInt(1),
                     colorArray.getInt(2), colorArray.getDouble(3));
+
+            //FORMAT >= 1.0
+            if (map.format >= 1.0) {
+                if (map.view.keySet().contains("SHAPE")) {
+                    DEFAULT_SHAPE = map.view.getString("SHAPE");
+                }
+            }//endif format >= 1.0
 
             JSONArray viewRect = map.view.getJSONArray("RECT");
             int view_width = viewRect.getInt(0);

@@ -366,7 +366,7 @@ class GameScreen extends JPanel {
                         toPaint = Config.FOREGROUD_COLOR;
 
                     graphics.setColor(toPaint);
-                    graphics.fillRect(r.x, r.y, r.width, r.height);
+                    paintShape(graphics, r, Config.DEFAULT_SHAPE);
                     graphics.setColor(c);
                 }else {
                     /*
@@ -387,6 +387,30 @@ class GameScreen extends JPanel {
             }
         }
         graphics.dispose();
+    }
+
+    /*
+    * 形状构造
+    *
+    * 参数: graphics2D    画布
+    *       resource    绘制区域
+    *       shape       形状
+    * */
+    public void paintShape(Graphics2D graphics2D, Rectangle resource, String shape) {
+        switch (shape) {
+            case "FILL-RECTANGLE":
+                graphics2D.fillRect(resource.x, resource.y, resource.width, resource.height);
+                break;
+            case "FILL-CIRCLE":
+                graphics2D.fillOval(resource.x, resource.y, resource.width, resource.height);
+                break;
+            case "RECTANGLE":
+                graphics2D.drawRect(resource.x, resource.y, resource.width, resource.height);
+                break;
+            case "CIRCLE":
+                graphics2D.drawOval(resource.x, resource.y, resource.width, resource.height);
+                break;
+        }
     }
 
     /*

@@ -171,9 +171,20 @@ class GameScreen extends JPanel {
                     }
                 } else {
                     imageSnakeHead = null;
+                    imageSnakeHeadUp = null;
+                    imageSnakeHeadDown = null;
+                    imageSnakeHeadRight = null;
                     imageSnakeBody = null;
                     imageSnakeTurn = null;
+                    imageSnakeTurnLU = null;
+                    imageSnakeTurnRU = null;
+                    imageSnakeTurnLD = null;
+                    imageSnakeTurnRD = null;
                     imageSnakeTail = null;
+                    imageSnakeTailUp = null;
+                    imageSnakeTailDown = null;
+                    imageSnakeTailRight = null;
+
                 }
 
                 createSnake();
@@ -311,8 +322,7 @@ class GameScreen extends JPanel {
         int bg_width = Config.VIEW_SIZE.width;
         int bg_height = Config.VIEW_SIZE.height;
         if (imageBackground != null) {
-            graphics.drawImage(imageBackground.getScaledInstance(bg_width, bg_height, Image.SCALE_SMOOTH),
-                    0, 0, bg_width, bg_height, this);
+            graphics.drawImage(imageBackground, 0, 0, bg_width, bg_height, this);
         }else {
             graphics.setColor(Config.BACKGROUD_COLOR);
             graphics.fillRect(0, 0, bg_width, bg_height);
@@ -337,12 +347,15 @@ class GameScreen extends JPanel {
                     if (IMG == null) {
                         if (drawable.getDrawableArea().meta instanceof java.util.Map<?, ?>) {
 
-                            for (Object object :((Map) drawable.getDrawableArea().meta).values()) {
-                                if (object instanceof Color) {
-                                    toPaint = (Color) ((Map) drawable.getDrawableArea().meta).get(r);
-                                }
-                                break;
+                            if (((Map) drawable.getDrawableArea().meta).values().toArray()[0] instanceof Color) {
+                                toPaint = (Color) ((Map) drawable.getDrawableArea().meta).get(r);
                             }
+//                            for (Object object :((Map) drawable.getDrawableArea().meta).values()) {
+//                                if (object instanceof Color) {
+//                                    toPaint = (Color) ((Map) drawable.getDrawableArea().meta).get(r);
+//                                }
+//                                break;
+//                            }
                         }else {
                             toPaint = (Color)drawable.getDrawableArea().paintMethd.get(null);
                         }
@@ -375,6 +388,7 @@ class GameScreen extends JPanel {
                 }
             }
         }
+        graphics.dispose();
     }
 
     /*
@@ -588,7 +602,8 @@ class GameScreen extends JPanel {
                 g.fillRect(0, 0, this.getWidth(), this.getHeight());
                 g.setColor(c);
             }else
-                g.drawImage(imageBackgroundStart, 0, 0, this.getWidth(), this.getHeight(), this);
+                g.drawImage(imageBackgroundStart.getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_SMOOTH),
+                        0, 0, this.getWidth(), this.getHeight(), this);
         }else {
             paintObject((Graphics2D) g);
         }

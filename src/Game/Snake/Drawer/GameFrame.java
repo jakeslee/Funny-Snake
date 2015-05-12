@@ -2,8 +2,6 @@ package Game.Snake.Drawer;
 
 import Game.Snake.Configuration.Config;
 import Game.Snake.Controller.EventProcessAdapter;
-import org.json.JSONException;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -22,17 +20,6 @@ public class GameFrame extends JFrame {
 
     public GameFrame() throws HeadlessException {
         super("贪吃蛇 " + Config.VERSION);
-
-        try {
-            Config.loadConfig();
-        }catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        if (Config.CURRENT_MAP == null && Config.DEFAULT_MAP != null) {
-            Config.applyMap(Config.DEFAULT_MAP);
-        }else
-            Config.applyMap(Config.CURRENT_MAP);
 
         JButton jButtonStart = new JButton("开始游戏");
         JButton setting = new JButton("设置");
@@ -159,8 +146,6 @@ public class GameFrame extends JFrame {
                 }
             }
         });
-
-        Config.update();
     }
 }
 

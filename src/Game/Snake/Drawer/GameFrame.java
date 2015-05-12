@@ -2,6 +2,7 @@ package Game.Snake.Drawer;
 
 import Game.Snake.Configuration.Config;
 import Game.Snake.Controller.EventProcessAdapter;
+import org.json.JSONException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,7 +23,12 @@ public class GameFrame extends JFrame {
     public GameFrame() throws HeadlessException {
         super("贪吃蛇 " + Config.VERSION);
 
-        Config.loadConfig();
+        try {
+            Config.loadConfig();
+        }catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         if (Config.CURRENT_MAP == null && Config.DEFAULT_MAP != null) {
             Config.applyMap(Config.DEFAULT_MAP);
         }else

@@ -13,8 +13,9 @@ import java.util.List;
  * Created by jakes on 15/5/9.
  */
 public class Map {
-    public Wall wall;
-    public JSONObject  snake;
-    public JSONObject  food;
-    public JSONObject  view;
+    public Wall         wall;
+    public double       format = 0;
+    public JSONObject   snake;
+    public JSONObject   food;
+    public JSONObject   view;
 }

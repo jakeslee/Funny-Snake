@@ -8,7 +8,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -138,6 +141,7 @@ class GameScreen extends JPanel {
                 //SNAKE_HEAD_IMG, SNAKE_BODY_IMG, SNAKE_TURN_IMG, SNAKE_TAIL_IMG
                 if (Config.SNAKE_HEAD_IMG != null) {
                     try {
+
                         imageSnakeHead = ImageIO.read(new File(Config.SNAKE_HEAD_IMG));
                         imageSnakeBody = ImageIO.read(new File(Config.SNAKE_BODY_IMG));
                         if (Config.SNAKE_TURN_IMG != null)
@@ -311,7 +315,11 @@ class GameScreen extends JPanel {
                 Color toPaint = null;
                 if (drawable.getDrawableArea().paintMethd != null) {
                     method = (String)drawable.getDrawableArea().paintMethd.get(r);
-                    IMG = getImageByMethod(method);
+                    try {
+                        IMG = getImageByMethod(method);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     if (IMG == null) {
                         if (drawable.getDrawableArea().meta instanceof java.util.Map<?, ?>) {
 
@@ -360,14 +368,25 @@ class GameScreen extends JPanel {
     *
     * 参数: method    绘制方法
     *
+    * HEAD默认朝向LEFT<-RIGHT
+    *
     * 返回值: 返回对应的图片，null将使用默认方式绘制
     * */
-    public Image getImageByMethod(String method) {
+    public Image getImageByMethod(String method) throws Exception {
         Image IMG = null;
         if (method != null) {
             switch (method) {
-                case "SNAKE_HEAD":
+                case "SNAKE_HEAD_UP":
+                    IMG = rotateImage(toBufferedImage(imageSnakeHead), 90);
+                    break;
+                case "SNAKE_HEAD_DOWN":
+                    IMG = rotateImage(toBufferedImage(imageSnakeHead), -90);
+                    break;
+                case "SNAKE_HEAD_LEFT":
                     IMG = imageSnakeHead;
+                    break;
+                case "SNAKE_HEAD_RIGHT":
+                    IMG = rotateImage(toBufferedImage(imageSnakeHead), 180);
                     break;
                 case "SNAKE_BODY":
                     IMG = imageSnakeBody;
@@ -375,20 +394,44 @@ class GameScreen extends JPanel {
                 case "SNAKE_TAIL":
                     IMG = imageSnakeTail;
                     break;
+                case "SNAKE_TAIL_UP":
+                    IMG = rotateImage(toBufferedImage(imageSnakeTail), 90);
+                    break;
+                case "SNAKE_TAIL_DOWN":
+                    IMG = rotateImage(toBufferedImage(imageSnakeTail), -90);;
+                    break;
+                case "SNAKE_TAIL_LEFT":
+                    IMG = imageSnakeTail;
+                    break;
+                case "SNAKE_TAIL_RIGHT":
+                    IMG = rotateImage(toBufferedImage(imageSnakeTail), 180);;
+                    break;
                 case "SNAKE_TURN":
                     IMG = imageSnakeTurn;
                     break;
                 case "SNAKE_TURN_LU":
-                    IMG = imageSnakeTurnLU;
+                    if (imageSnakeTurnLU == null && imageSnakeTurn != null)
+                        IMG = imageSnakeTurn;
+                    else
+                        IMG = imageSnakeTurnLU;
                     break;
                 case "SNAKE_TURN_RU":
-                    IMG = imageSnakeTurnRU;
+                    if (imageSnakeTurnRU == null && imageSnakeTurn != null)
+                        IMG = rotateImage(toBufferedImage(imageSnakeTurn), 90);
+                    else
+                        IMG = imageSnakeTurnRU;
                     break;
                 case "SNAKE_TURN_LD":
-                    IMG = imageSnakeTurnLD;
+                    if (imageSnakeTurnLD == null && imageSnakeTurn != null)
+                        IMG = rotateImage(toBufferedImage(imageSnakeTurn), -90);
+                    else
+                        IMG = imageSnakeTurnLD;
                     break;
                 case "SNAKE_TURN_RD":
-                    IMG = imageSnakeTurnRD;
+                    if (imageSnakeTurnRD == null && imageSnakeTurn != null)
+                        IMG = rotateImage(toBufferedImage(imageSnakeTurn), 180);
+                    else
+                        IMG = imageSnakeTurnRD;
                     break;
                 case "FOOD":
                     IMG = imageFood;
@@ -409,6 +452,54 @@ class GameScreen extends JPanel {
             }
         }
         return null;
+    }
+
+
+
+    public BufferedImage rotateImage(BufferedImage src, double radians) throws Exception{
+
+        // The required drawing location
+        int drawLocationX = 0;
+        int drawLocationY = 0;
+
+        // Rotation information
+
+        double rotationRequired = Math.toRadians(radians);
+        double locationX = src.getWidth() / 2;
+        double locationY = src.getHeight() / 2;
+        AffineTransform tx = AffineTransform.getRotateInstance(rotationRequired, locationX, locationY);
+        AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
+
+        BufferedImage bimage = new BufferedImage(src.getWidth(null), src.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+        // Drawing the rotated image at the required drawing locations
+        Graphics2D g2d = bimage.createGraphics();
+        g2d.drawImage(op.filter(src, null), drawLocationX, drawLocationY, null);
+        return bimage;
+    }
+
+    /**
+     * Converts a given Image into a BufferedImage
+     *
+     * @param img The Image to be converted
+     * @return The converted BufferedImage
+     */
+    public static BufferedImage toBufferedImage(Image img)
+    {
+        if (img instanceof BufferedImage)
+        {
+            return (BufferedImage) img;
+        }
+
+        // Create a buffered image with transparency
+        BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+
+        // Draw the image on to the buffered image
+        Graphics2D bGr = bimage.createGraphics();
+        bGr.drawImage(img, 0, 0, null);
+        bGr.dispose();
+
+        // Return the buffered image
+        return bimage;
     }
 
     /*

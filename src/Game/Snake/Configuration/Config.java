@@ -173,8 +173,8 @@ public class Config {
                 SNAKE_HEAD_IMG = MAP_DIRECTORY + mapName + File.separator + map.snake.getString("HEAD");
 
 
-                //Map format > 1.0
-                if (map.format > 1.0) {
+                //Map format >= 1.0
+                if (map.format >= 1.0) {
                     JSONArray arrayTurn = map.snake.optJSONArray("TURN");
 
                     if (arrayTurn != null && arrayTurn.length() == 4 && arrayTurn.optString(0) != null) {
@@ -185,7 +185,7 @@ public class Config {
                     }else {
                         SNAKE_TURN_IMG = MAP_DIRECTORY + mapName + File.separator + map.snake.getString("TURN");
                     }
-                }//endif format > 1.0
+                }//endif format >= 1.0
 
                 SNAKE_BODY_IMG = MAP_DIRECTORY + mapName + File.separator + map.snake.getString("BODY");
                 SNAKE_TAIL_IMG = MAP_DIRECTORY + mapName + File.separator + map.snake.getString("TAIL");
@@ -199,8 +199,8 @@ public class Config {
                 SNAKE_BODY_IMG = null;
                 SNAKE_TAIL_IMG = null;
 
-                //load colors - map format > 1.0
-                if (map.format > 1.0) {
+                //load colors - map format >= 1.0
+                if (map.format >= 1.0) {
                     JSONArray colors = map.snake.getJSONArray("HEAD");
 
                     SNAKE_HEAD_COLOR = makeRGBA(colors.getInt(0), colors.getInt(1),
@@ -232,7 +232,7 @@ public class Config {
                         SNAKE_TURN_COLOR = makeRGBA(colors.getInt(0),colors.getInt(1),
                                 colors.getInt(2), colors.getDouble(3));
                     }
-                }//endif format > 1.0
+                }//endif format >= 1.0
             }
 
             //FOOD

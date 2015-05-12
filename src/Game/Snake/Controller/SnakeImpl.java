@@ -92,31 +92,64 @@ public class SnakeImpl implements Snake, Collidedable, Drawable {
                     node.nextDirection = snakeNodes.get(i - 1).lastDirection;
                 }
 
-                paintMethod.put(snakeNodes.get(0).body, "SNAKE_HEAD");
+                switch (snakeNodes.get(0).nextDirection) {
+                    case Snake.DIRECTION_UP:
+                        paintMethod.put(snakeNodes.get(0).body, "SNAKE_HEAD_UP");
+                        break;
+                    case Snake.DIRECTION_DOWN:
+                        paintMethod.put(snakeNodes.get(0).body, "SNAKE_HEAD_DOWN");
+                        break;
+                    case Snake.DIRECTION_LEFT:
+                        paintMethod.put(snakeNodes.get(0).body, "SNAKE_HEAD_LEFT");
+                        break;
+                    case Snake.DIRECTION_RIGHT:
+                        paintMethod.put(snakeNodes.get(0).body, "SNAKE_HEAD_RIGHT");
+                        break;
+                }
+                colorMap.put("SNAKE_HEAD", Config.SNAKE_HEAD_COLOR);
 
                 for (int i = 1; i < snakeNodes.size(); i++) {
                     if (snakeNodes.get(i).nextDirection != snakeNodes.get(i).lastDirection) {
                         SnakeNode snakeNode1 = snakeNodes.get(i);
-                        switch (snakeNode1.nextDirection & snakeNode1.lastDirection) {
-                            case 0x30://LU
-                                paintMethod.put(snakeNodes.get(i).body, "SNAKE_TURN_LU");
-                                colorMap.put("SNAKE_TURN_LU", Config.SNAKE_TURN_LU_COLOR);
-                                break;
-                            case 0xC0://RU
-                                paintMethod.put(snakeNodes.get(i).body, "SNAKE_TURN_RU");
-                                colorMap.put("SNAKE_TURN_RU", Config.SNAKE_TURN_RU_COLOR);
-                                break;
-                            case 0x0C://LD
-                                paintMethod.put(snakeNodes.get(i).body, "SNAKE_TURN_LD");
-                                colorMap.put("SNAKE_TURN_LD", Config.SNAKE_TURN_LD_COLOR);
-                                break;
-                            case 0x03://RD
-                                paintMethod.put(snakeNodes.get(i).body, "SNAKE_TURN_RD");
-                                colorMap.put("SNAKE_TURN_RD", Config.SNAKE_TURN_RD_COLOR);
-                                break;
+                        if ((snakeNode1.nextDirection == Snake.DIRECTION_DOWN &&
+                                snakeNode1.lastDirection == Snake.DIRECTION_LEFT) ||
+                                (snakeNode1.nextDirection == Snake.DIRECTION_RIGHT &&
+                                        snakeNode1.lastDirection == Snake.DIRECTION_UP)) {
+                            paintMethod.put(snakeNodes.get(i).body, "SNAKE_TURN_LD");
+                            colorMap.put("SNAKE_TURN_LD", Config.SNAKE_TURN_LD_COLOR);
+                        }else if ((snakeNode1.nextDirection == Snake.DIRECTION_RIGHT &&
+                                snakeNode1.lastDirection == Snake.DIRECTION_DOWN) ||
+                                (snakeNode1.nextDirection == Snake.DIRECTION_UP &&
+                                        snakeNode1.lastDirection == Snake.DIRECTION_LEFT)) {
+                            paintMethod.put(snakeNodes.get(i).body, "SNAKE_TURN_RD");
+                            colorMap.put("SNAKE_TURN_RD", Config.SNAKE_TURN_RD_COLOR);
+                        }else if ((snakeNode1.nextDirection == Snake.DIRECTION_LEFT &&
+                                snakeNode1.lastDirection == Snake.DIRECTION_UP) ||
+                                (snakeNode1.nextDirection == Snake.DIRECTION_DOWN &&
+                                        snakeNode1.lastDirection == Snake.DIRECTION_RIGHT)) {
+                            paintMethod.put(snakeNodes.get(i).body, "SNAKE_TURN_LU");
+                            colorMap.put("SNAKE_TURN_LU", Config.SNAKE_TURN_LU_COLOR);
+                        }else {
+                            paintMethod.put(snakeNodes.get(i).body, "SNAKE_TURN_RU");
+                            colorMap.put("SNAKE_TURN_RU", Config.SNAKE_TURN_RU_COLOR);
                         }
                     }else if (i == snakeNodes.size() -1) {
-                        paintMethod.put(snakeNodes.get(i).body, "SNAKE_TAIL");
+                        switch (~snakeNodes.get(i).nextDirection) {
+                            case Snake.DIRECTION_UP:
+                                paintMethod.put(snakeNodes.get(i).body, "SNAKE_TAIL_UP");
+                                break;
+                            case Snake.DIRECTION_DOWN:
+                                paintMethod.put(snakeNodes.get(i).body, "SNAKE_TAIL_DOWN");
+                                break;
+                            case Snake.DIRECTION_LEFT:
+                                paintMethod.put(snakeNodes.get(i).body, "SNAKE_TAIL_LEFT");
+                                break;
+                            case Snake.DIRECTION_RIGHT:
+                                paintMethod.put(snakeNodes.get(i).body, "SNAKE_TAIL_RIGHT");
+                                break;
+                        }
+                        colorMap.put("SNAKE_TAIL", Config.SNAKE_TAIL_COLOR);
+
                     }else {
                         paintMethod.put(snakeNodes.get(i).body, "SNAKE_BODY");
                     }

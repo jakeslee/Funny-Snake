@@ -35,10 +35,20 @@ public class Config {
             e.updateEvent(null);
     }
 
+    /*
+    * 构造绝对路径
+    *
+    * 参数: 相对路径
+    *
+    * 返回值: 对应的绝对路径
+    * */
     public static String buildPath(String path) {
         return Config.PWD + File.separator + path;
     }
 
+    /*
+    * 加载配置信息
+    * */
     public static void loadConfig() throws JSONException{
         String content = readFile(buildPath("config.json"));
         if (!content.equals("")) {
@@ -75,6 +85,9 @@ public class Config {
         }
     }
 
+    /*
+    * 加载地图资源到内存
+    * */
     public static void loadMaps() {
         MAPS.clear();
         File path = new File(MAP_DIRECTORY);
@@ -154,6 +167,11 @@ public class Config {
         }
     }
 
+    /*
+    * 使用某地图
+    *
+    * 参数: mapName   地图名
+    * */
     public static void applyMap(String mapName) {
         CURRENT_MAP = mapName;
         Map map = MAPS.get(mapName);
@@ -280,10 +298,23 @@ public class Config {
         update();
     }
 
+    /*
+    * 构造一个Color类
+    *
+    * 参数:   rgba 颜色值，CSS中的方式
+    *
+    * 返回值: 构造的Color对象
+    * */
     public static Color makeRGBA(int r, int g, int b, double a) {
         return new Color(r, g, b, (int)a * 255);
     }
 
+    /*
+    * 写到文件
+    *
+    * 参数: filePath  文件存放路径
+    *       sets     文件内容
+    * */
     public static void writeFile(String filePath, String sets)
             throws IOException {
         FileWriter fw = new FileWriter(filePath);
@@ -294,6 +325,13 @@ public class Config {
         out.close();
     }
 
+    /*
+    * 读入文件
+    *
+    * 参数: path  文件的路径
+    *
+    * 返回值: 文件内容
+    * */
     public static String readFile(String path) {
         File file = new File(path);
         BufferedReader reader = null;
@@ -529,5 +567,8 @@ public class Config {
     * */
     public static java.util.Map<Integer, String> LEVELS = new HashMap<>();
 
+    /*
+    * 当前工作目录
+    * */
     public static String PWD = null;
 }

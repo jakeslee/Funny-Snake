@@ -5,7 +5,13 @@ package Game.Snake.Controller;
  */
 
 public interface EventProcessListener {
-    public void eventProcessing();
-    public void updateEvent(Object data);
+    /*
+    * 事件处理函数
+    * */
+    void eventProcessing();
+    /*
+    * 数据更新响应函数
+    * */
+    void updateEvent(Object data);
 }
 

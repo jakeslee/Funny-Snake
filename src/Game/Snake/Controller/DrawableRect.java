@@ -34,6 +34,7 @@ public class DrawableRect {
     *
     *              PAINT_COLOR          Color
     *              ...
+    * Map<String, Color>    绘制方法，绘制颜色
     * */
     public Object meta = null;
 }

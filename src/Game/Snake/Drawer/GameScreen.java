@@ -350,12 +350,7 @@ class GameScreen extends JPanel {
                             if (((Map) drawable.getDrawableArea().meta).values().toArray()[0] instanceof Color) {
                                 toPaint = (Color) ((Map) drawable.getDrawableArea().meta).get(r);
                             }
-//                            for (Object object :((Map) drawable.getDrawableArea().meta).values()) {
-//                                if (object instanceof Color) {
-//                                    toPaint = (Color) ((Map) drawable.getDrawableArea().meta).get(r);
-//                                }
-//                                break;
-//                            }
+
                         }else {
                             toPaint = (Color)drawable.getDrawableArea().paintMethd.get(null);
                         }
@@ -374,6 +369,9 @@ class GameScreen extends JPanel {
                     graphics.fillRect(r.x, r.y, r.width, r.height);
                     graphics.setColor(c);
                 }else {
+                    /*
+                    * 此处对图片进行平铺
+                    * */
                     if (r.width > Config.SNAKE_BODY_WIDTH || r.height > Config.SNAKE_BODY_WIDTH) {
                         for (int i = 0; i < r.width / Config.SNAKE_BODY_WIDTH; i++) {
                             for (int j = 0; j < r.height / Config.SNAKE_BODY_WIDTH; j++) {

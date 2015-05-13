@@ -2,7 +2,6 @@ package Game.Snake.Controller;
 
 import Game.Snake.Configuration.Config;
 
-import javax.swing.*;
 import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -45,6 +44,11 @@ public class SnakeImpl implements Snake, Collidedable, Drawable {
     private Map<Rectangle, Object> paintMethod = new HashMap<>();
 
     /*
+    * 绘制颜色
+    * */
+    Map<String, Color> colorMap = new HashMap<>();
+
+    /*
     * 设置刷新事件
     * */
     private EventProcessListener refresh = null;
@@ -69,6 +73,14 @@ public class SnakeImpl implements Snake, Collidedable, Drawable {
         }
         head = snakeNodes.get(0);
 
+        colorMap.put("SNAKE_HEAD", Config.SNAKE_HEAD_COLOR);
+        colorMap.put("SNAKE_BODY", Config.SNAKE_BODY_COLOR);
+        colorMap.put("SNAKE_TURN_LD", Config.SNAKE_TURN_LD_COLOR);
+        colorMap.put("SNAKE_TURN_RD", Config.SNAKE_TURN_RD_COLOR);
+        colorMap.put("SNAKE_TURN_LU", Config.SNAKE_TURN_LU_COLOR);
+        colorMap.put("SNAKE_TURN_RU", Config.SNAKE_TURN_RU_COLOR);
+        colorMap.put("SNAKE_TAIL", Config.SNAKE_TAIL_COLOR);
+
         /*
         * 计时器实例化，开始移动
         * */
@@ -87,13 +99,13 @@ public class SnakeImpl implements Snake, Collidedable, Drawable {
                     node.nextDirection = snakeNodes.get(i - 1).lastDirection;
                 }
 
-                paintMethod.put(snakeNodes.get(0).body, "SNAKE_HEAD");
+                paintMethod.put(snakeNodes.get(0).body, getHeadDirection(snakeNodes.get(0)));
 
                 for (int i = 1; i < snakeNodes.size(); i++) {
-                    if (snakeNodes.get(i).nextDirection != snakeNodes.get(i).lastDirection) {
-                        paintMethod.put(snakeNodes.get(i).body, "SNAKE_TURN");
-                    }else if (i == snakeNodes.size() -1) {
-                        paintMethod.put(snakeNodes.get(i).body, "SNAKE_TAIL");
+                    if (i == snakeNodes.size() -1) {
+                        paintMethod.put(snakeNodes.get(i).body, getTailDirection(snakeNodes.get(i)));
+                    }else if (snakeNodes.get(i).nextDirection != snakeNodes.get(i).lastDirection) {
+                        paintMethod.put(snakeNodes.get(i).body, getTurnDirection(snakeNodes.get(i)));
                     }else {
                         paintMethod.put(snakeNodes.get(i).body, "SNAKE_BODY");
                     }
@@ -101,13 +113,71 @@ public class SnakeImpl implements Snake, Collidedable, Drawable {
                     if (CollideWatcher.isCollided(head.body, snakeNodes.get(i).body)) {
                         stop();
                         death.eventProcessing();
-                        break;
+                        return;
                     }
                 }
                 refresh.updateEvent(null);
-
             }
         });
+    }
+
+    /*
+    * 取蛇尾方向
+    * */
+    public String getTailDirection(SnakeNode node) {
+        switch (~node.nextDirection) {
+            case Snake.DIRECTION_UP:
+                return "SNAKE_TAIL_UP";
+            case Snake.DIRECTION_DOWN:
+                return "SNAKE_TAIL_DOWN";
+            case Snake.DIRECTION_LEFT:
+                return "SNAKE_TAIL_LEFT";
+            case Snake.DIRECTION_RIGHT:
+                return "SNAKE_TAIL_RIGHT";
+            default:
+                return "SNAKE_TAIL";
+        }
+    }
+
+    /*
+    * 取蛇头方向
+    * */
+    public String getHeadDirection(SnakeNode node) {
+        switch (node.nextDirection) {
+            case Snake.DIRECTION_UP:
+                return "SNAKE_HEAD_UP";
+            case Snake.DIRECTION_DOWN:
+                return "SNAKE_HEAD_DOWN";
+            case Snake.DIRECTION_LEFT:
+                return "SNAKE_HEAD_LEFT";
+            case Snake.DIRECTION_RIGHT:
+                return "SNAKE_HEAD_RIGHT";
+            default:
+                return "SNAKE_HEAD";
+        }
+    }
+
+    /*
+    * 取转角方向
+    * */
+    public String getTurnDirection(SnakeNode node) {
+        if ((node.nextDirection == Snake.DIRECTION_DOWN &&
+                node.lastDirection == Snake.DIRECTION_LEFT) ||
+                (node.nextDirection == Snake.DIRECTION_RIGHT &&
+                        node.lastDirection == Snake.DIRECTION_UP)) {
+            return "SNAKE_TURN_LD";
+        }else if ((node.nextDirection == Snake.DIRECTION_RIGHT &&
+                node.lastDirection == Snake.DIRECTION_DOWN) ||
+                (node.nextDirection == Snake.DIRECTION_UP &&
+                        node.lastDirection == Snake.DIRECTION_LEFT)) {
+            return "SNAKE_TURN_RD";
+        }else if ((node.nextDirection == Snake.DIRECTION_LEFT &&
+                node.lastDirection == Snake.DIRECTION_UP) ||
+                (node.nextDirection == Snake.DIRECTION_DOWN &&
+                        node.lastDirection == Snake.DIRECTION_RIGHT)) {
+            return "SNAKE_TURN_LU";
+        }else
+            return "SNAKE_TURN_RU";
     }
 
     /*
@@ -163,7 +233,7 @@ public class SnakeImpl implements Snake, Collidedable, Drawable {
             snakeMoving((byte) ~last.lastDirection, s);
 
             paintMethod.put(last.body, "SNAKE_BODY");
-            paintMethod.put(s.body, "SNAKE_TAIL");
+            paintMethod.put(s.body, getTailDirection(s));
 
             snakeNodes.add(s);
             refresh.eventProcessing();
@@ -260,7 +330,8 @@ public class SnakeImpl implements Snake, Collidedable, Drawable {
     public DrawableRect getDrawableArea() {
         DrawableRect drawableRect = new DrawableRect();
         drawableRect.rectangles = getSnakeRect();
-        drawableRect.paintMethd = paintMethod;
+        drawableRect.paintMethod = paintMethod;
+        drawableRect.meta = colorMap;
         return drawableRect;
     }
 }

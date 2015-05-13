@@ -22,7 +22,7 @@ public class DrawableRect {
     *                          null (SNAKE_DEFAULT)
     *     null          绘制颜色
     * */
-    public Map<Rectangle, Object> paintMethd = null;
+    public Map<Rectangle, Object> paintMethod = null;
 
     /*
     * 其它附加元信息
@@ -34,6 +34,7 @@ public class DrawableRect {
     *
     *              PAINT_COLOR          Color
     *              ...
+    * Map<String, Color>    绘制方法，绘制颜色
     * */
     public Object meta = null;
 }

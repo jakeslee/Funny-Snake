@@ -8,9 +8,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
+
 /**
  * Created by jakes on 15/5/6.
  */
@@ -23,9 +28,19 @@ class GameScreen extends JPanel {
     private Image imageBackgroundDefault = null;
     private Image imageSnakeDefault = null;
     private Image imageSnakeHead = null;
+    private Image imageSnakeHeadUp = null;
+    private Image imageSnakeHeadDown = null;
+    private Image imageSnakeHeadRight = null;
     private Image imageSnakeBody = null;
     private Image imageSnakeTurn = null;
+    private Image imageSnakeTurnLU = null;
+    private Image imageSnakeTurnRU = null;
+    private Image imageSnakeTurnLD = null;
+    private Image imageSnakeTurnRD = null;
     private Image imageSnakeTail = null;
+    private Image imageSnakeTailUp = null;
+    private Image imageSnakeTailDown = null;
+    private Image imageSnakeTailRight = null;
     private Image imageFood = null;
     private Image imageWall = null;
 
@@ -131,18 +146,44 @@ class GameScreen extends JPanel {
                 //SNAKE_HEAD_IMG, SNAKE_BODY_IMG, SNAKE_TURN_IMG, SNAKE_TAIL_IMG
                 if (Config.SNAKE_HEAD_IMG != null) {
                     try {
+
                         imageSnakeHead = ImageIO.read(new File(Config.SNAKE_HEAD_IMG));
+                        imageSnakeHeadUp = rotateImage(toBufferedImage(imageSnakeHead), 90);
+                        imageSnakeHeadDown = rotateImage(toBufferedImage(imageSnakeHead), -90);
+                        imageSnakeHeadRight = rotateImage(toBufferedImage(imageSnakeHead), 180);
+
                         imageSnakeBody = ImageIO.read(new File(Config.SNAKE_BODY_IMG));
-                        imageSnakeTurn = ImageIO.read(new File(Config.SNAKE_TURN_IMG));
+                        if (Config.SNAKE_TURN_IMG != null)
+                            imageSnakeTurn = ImageIO.read(new File(Config.SNAKE_TURN_IMG));
+                        else if (Config.SNAKE_TURN_LU_IMG != null) {
+                            imageSnakeTurnLU = ImageIO.read(new File(Config.SNAKE_TURN_LU_IMG));
+                            imageSnakeTurnRU = ImageIO.read(new File(Config.SNAKE_TURN_RU_IMG));
+                            imageSnakeTurnLD = ImageIO.read(new File(Config.SNAKE_TURN_LD_IMG));
+                            imageSnakeTurnRD = ImageIO.read(new File(Config.SNAKE_TURN_RD_IMG));
+                        }
                         imageSnakeTail = ImageIO.read(new File(Config.SNAKE_TAIL_IMG));
-                    } catch (IOException e) {
+                        imageSnakeTailUp = rotateImage(toBufferedImage(imageSnakeTail), 90);
+                        imageSnakeTailDown = rotateImage(toBufferedImage(imageSnakeTail), -90);
+                        imageSnakeTailRight = rotateImage(toBufferedImage(imageSnakeTail), 180);
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 } else {
                     imageSnakeHead = null;
+                    imageSnakeHeadUp = null;
+                    imageSnakeHeadDown = null;
+                    imageSnakeHeadRight = null;
                     imageSnakeBody = null;
                     imageSnakeTurn = null;
+                    imageSnakeTurnLU = null;
+                    imageSnakeTurnRU = null;
+                    imageSnakeTurnLD = null;
+                    imageSnakeTurnRD = null;
                     imageSnakeTail = null;
+                    imageSnakeTailUp = null;
+                    imageSnakeTailDown = null;
+                    imageSnakeTailRight = null;
+
                 }
 
                 createSnake();
@@ -295,11 +336,24 @@ class GameScreen extends JPanel {
 
             for (Rectangle r : drawable.getDrawableArea().rectangles) {
                 Color toPaint = null;
-                if (drawable.getDrawableArea().paintMethd != null) {
-                    method = (String)drawable.getDrawableArea().paintMethd.get(r);
-                    IMG = getImageByMethod(method);
-                    if (IMG == null)
-                        toPaint = (Color)drawable.getDrawableArea().paintMethd.get(null);
+                if (drawable.getDrawableArea().paintMethod != null) {
+                    method = (String)drawable.getDrawableArea().paintMethod.get(r);
+                    try {
+                        IMG = getImageByMethod(method);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    if (IMG == null) {
+                        if (drawable.getDrawableArea().meta instanceof java.util.Map<?, ?>) {
+
+                            if (((Map) drawable.getDrawableArea().meta).values().toArray()[0] instanceof Color) {
+                                toPaint = (Color) ((Map) drawable.getDrawableArea().meta).get(r);
+                            }
+
+                        }else {
+                            toPaint = (Color)drawable.getDrawableArea().paintMethod.get(null);
+                        }
+                    }
                 }else {
                     IMG = null;
                 }
@@ -311,9 +365,12 @@ class GameScreen extends JPanel {
                         toPaint = Config.FOREGROUD_COLOR;
 
                     graphics.setColor(toPaint);
-                    graphics.fillRect(r.x, r.y, r.width, r.height);
+                    paintShape(graphics, r, Config.DEFAULT_SHAPE);
                     graphics.setColor(c);
                 }else {
+                    /*
+                    * 此处对图片进行平铺
+                    * */
                     if (r.width > Config.SNAKE_BODY_WIDTH || r.height > Config.SNAKE_BODY_WIDTH) {
                         for (int i = 0; i < r.width / Config.SNAKE_BODY_WIDTH; i++) {
                             for (int j = 0; j < r.height / Config.SNAKE_BODY_WIDTH; j++) {
@@ -328,6 +385,31 @@ class GameScreen extends JPanel {
                 }
             }
         }
+        graphics.dispose();
+    }
+
+    /*
+    * 形状构造
+    *
+    * 参数: graphics2D    画布
+    *       resource    绘制区域
+    *       shape       形状
+    * */
+    public void paintShape(Graphics2D graphics2D, Rectangle resource, String shape) {
+        switch (shape) {
+            case "FILL-RECTANGLE":
+                graphics2D.fillRect(resource.x, resource.y, resource.width, resource.height);
+                break;
+            case "FILL-CIRCLE":
+                graphics2D.fillOval(resource.x, resource.y, resource.width, resource.height);
+                break;
+            case "RECTANGLE":
+                graphics2D.drawRect(resource.x, resource.y, resource.width, resource.height);
+                break;
+            case "CIRCLE":
+                graphics2D.drawOval(resource.x, resource.y, resource.width, resource.height);
+                break;
+        }
     }
 
     /*
@@ -335,14 +417,28 @@ class GameScreen extends JPanel {
     *
     * 参数: method    绘制方法
     *
+    * HEAD默认朝向LEFT<-RIGHT
+    *
     * 返回值: 返回对应的图片，null将使用默认方式绘制
     * */
-    public Image getImageByMethod(String method) {
+    public Image getImageByMethod(String method) throws Exception {
         Image IMG = null;
         if (method != null) {
             switch (method) {
-                case "SNAKE_HEAD":
+                case "SNAKE_HEAD_UP":
+                    //IMG = rotateImage(toBufferedImage(imageSnakeHead), 90);
+                    IMG = imageSnakeHeadUp;
+                    break;
+                case "SNAKE_HEAD_DOWN":
+                    //IMG = rotateImage(toBufferedImage(imageSnakeHead), -90);
+                    IMG = imageSnakeHeadDown;
+                    break;
+                case "SNAKE_HEAD_LEFT":
                     IMG = imageSnakeHead;
+                    break;
+                case "SNAKE_HEAD_RIGHT":
+                    //IMG = rotateImage(toBufferedImage(imageSnakeHead), 180);
+                    IMG = imageSnakeHeadRight;
                     break;
                 case "SNAKE_BODY":
                     IMG = imageSnakeBody;
@@ -350,8 +446,47 @@ class GameScreen extends JPanel {
                 case "SNAKE_TAIL":
                     IMG = imageSnakeTail;
                     break;
+                case "SNAKE_TAIL_UP":
+                    //IMG = rotateImage(toBufferedImage(imageSnakeTail), 90);
+                    IMG = imageSnakeTailUp;
+                    break;
+                case "SNAKE_TAIL_DOWN":
+                    //IMG = rotateImage(toBufferedImage(imageSnakeTail), -90);
+                    IMG = imageSnakeTailDown;
+                    break;
+                case "SNAKE_TAIL_LEFT":
+                    IMG = imageSnakeTail;
+                    break;
+                case "SNAKE_TAIL_RIGHT":
+                    //IMG = rotateImage(toBufferedImage(imageSnakeTail), 180);
+                    IMG = imageSnakeTailRight;
+                    break;
                 case "SNAKE_TURN":
                     IMG = imageSnakeTurn;
+                    break;
+                case "SNAKE_TURN_LU":
+                    if (imageSnakeTurnLU == null && imageSnakeTurn != null)
+                        IMG = imageSnakeTurn;
+                    else
+                        IMG = imageSnakeTurnLU;
+                    break;
+                case "SNAKE_TURN_RU":
+                    if (imageSnakeTurnRU == null && imageSnakeTurn != null)
+                        IMG = rotateImage(toBufferedImage(imageSnakeTurn), 90);
+                    else
+                        IMG = imageSnakeTurnRU;
+                    break;
+                case "SNAKE_TURN_LD":
+                    if (imageSnakeTurnLD == null && imageSnakeTurn != null)
+                        IMG = rotateImage(toBufferedImage(imageSnakeTurn), -90);
+                    else
+                        IMG = imageSnakeTurnLD;
+                    break;
+                case "SNAKE_TURN_RD":
+                    if (imageSnakeTurnRD == null && imageSnakeTurn != null)
+                        IMG = rotateImage(toBufferedImage(imageSnakeTurn), 180);
+                    else
+                        IMG = imageSnakeTurnRD;
                     break;
                 case "FOOD":
                     IMG = imageFood;
@@ -372,6 +507,54 @@ class GameScreen extends JPanel {
             }
         }
         return null;
+    }
+
+
+
+    public BufferedImage rotateImage(BufferedImage src, double radians) throws Exception{
+
+        // The required drawing location
+        int drawLocationX = 0;
+        int drawLocationY = 0;
+
+        // Rotation information
+
+        double rotationRequired = Math.toRadians(radians);
+        double locationX = src.getWidth() / 2;
+        double locationY = src.getHeight() / 2;
+        AffineTransform tx = AffineTransform.getRotateInstance(rotationRequired, locationX, locationY);
+        AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
+
+        BufferedImage bimage = new BufferedImage(src.getWidth(null), src.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+        // Drawing the rotated image at the required drawing locations
+        Graphics2D g2d = bimage.createGraphics();
+        g2d.drawImage(op.filter(src, null), drawLocationX, drawLocationY, null);
+        return bimage;
+    }
+
+    /**
+     * Converts a given Image into a BufferedImage
+     *
+     * @param img The Image to be converted
+     * @return The converted BufferedImage
+     */
+    public static BufferedImage toBufferedImage(Image img)
+    {
+        if (img instanceof BufferedImage)
+        {
+            return (BufferedImage) img;
+        }
+
+        // Create a buffered image with transparency
+        BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+
+        // Draw the image on to the buffered image
+        Graphics2D bGr = bimage.createGraphics();
+        bGr.drawImage(img, 0, 0, null);
+        bGr.dispose();
+
+        // Return the buffered image
+        return bimage;
     }
 
     /*
@@ -440,7 +623,8 @@ class GameScreen extends JPanel {
                 g.fillRect(0, 0, this.getWidth(), this.getHeight());
                 g.setColor(c);
             }else
-                g.drawImage(imageBackgroundStart, 0, 0, this.getWidth(), this.getHeight(), this);
+                g.drawImage(imageBackgroundStart.getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_SMOOTH),
+                        0, 0, this.getWidth(), this.getHeight(), this);
         }else {
             paintObject((Graphics2D) g);
         }

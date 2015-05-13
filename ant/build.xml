@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Funny Snake" default="generateApp" basedir="..">
+    <taskdef
+            name="bundleapp"
+            classname="com.oracle.appbundler.AppBundlerTask"
+            classpath="ant/lib/appbundler-1.0.jar" />
+
+    <property file="ant/build.properties"/>
+
+    <target name="generateVersion">
+        <exec executable="${basedir}/version.sh" failonerror="true">
+            <arg value="Version.java"/>
+            <arg value="${basedir}/src/Game/Snake/Configuration/Version.java"/>
+        </exec>
+    </target>
+
+    <target name="generateApp" description="Build App for Mac OS X" depends="generateVersion">
+        <antcall target="bundle"/>
+    </target>
+
+    <target name="bundle">
+        <mkdir dir="${outputDir}"/>
+        <bundleapp
+                outputdirectory="${outputDir}"
+                name="${appName}"
+                icon="psds/icon.icns"
+                displayname="贪吃蛇"
+                identifier="asia.gkc.FunnySnake"
+                shortversion="${shortversion}"
+                copyright="Copyright Jakes &amp; lhwarthas, (c) 2015"
+                applicationCategory="public.app-category.developer-tools"
+                mainclassname="Game.Snake.Drawer.Main">
+            <classpath file="${jarPath}" />
+            <option value="-Duser.dir=$APP_ROOT/Contents/Resources"/>
+        </bundleapp>
+        <copy todir="${outputDir}/${appName}.app/Contents/Resources">
+            <fileset dir="." >
+                <include name="res/"/>
+                <include name="config.json"/>
+            </fileset>
+        </copy>
+    </target>
+</project>

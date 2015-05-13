@@ -53,7 +53,7 @@ public class FoodImpl implements Collidedable, Food, Drawable {
     @Override
     public java.util.List<Rectangle> getRectangles() {
         java.util.List<Rectangle> rects = new java.util.ArrayList<Rectangle>();
-        Rectangle rect = new Rectangle(x, y, Config.SNAKE_BODY_WIDTH, Config.SNAKE_BODY_WIDTH);
+        Rectangle rect = CollideWatcher.generateRectangle(x, y);
         rects.add(rect);
         return rects;
     }
@@ -86,7 +86,7 @@ public class FoodImpl implements Collidedable, Food, Drawable {
     public DrawableRect getDrawableArea() {
         DrawableRect drawableRect = new DrawableRect();
         drawableRect.rectangles = getRectangles();
-        drawableRect.paintMethd = paintMethod;
+        drawableRect.paintMethod = paintMethod;
         return drawableRect;
     }
 }

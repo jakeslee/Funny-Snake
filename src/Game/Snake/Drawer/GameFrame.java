@@ -2,7 +2,6 @@ package Game.Snake.Drawer;
 
 import Game.Snake.Configuration.Config;
 import Game.Snake.Controller.EventProcessAdapter;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -22,12 +21,6 @@ public class GameFrame extends JFrame {
     public GameFrame() throws HeadlessException {
         super("贪吃蛇 " + Config.VERSION);
 
-        Config.loadConfig();
-        if (Config.CURRENT_MAP == null && Config.DEFAULT_MAP != null) {
-            Config.applyMap(Config.DEFAULT_MAP);
-        }else
-            Config.applyMap(Config.CURRENT_MAP);
-
         JButton jButtonStart = new JButton("开始游戏");
         JButton setting = new JButton("设置");
 
@@ -41,9 +34,10 @@ public class GameFrame extends JFrame {
                             (((Integer) data).intValue() - Config.SNAKE_LENGTH) * (1000 / Config.SNAKE_SPEED) +
                             "  |  当前速度等级: " + Config.LEVELS.get(Config.SNAKE_SPEED));
                 else if (data instanceof Boolean) {
-                    if (((Boolean) data).booleanValue() == true) {
+                    if (((Boolean) data).booleanValue() == true && starting) {
                         JOptionPane.showMessageDialog(GameFrame.this.getContentPane(),
-                                "小蛇死咯~！", "提示", JOptionPane.INFORMATION_MESSAGE, new ImageIcon("res/icon-64.png"));
+                                "小蛇死咯~！", "提示", JOptionPane.INFORMATION_MESSAGE,
+                                new ImageIcon(Config.buildPath("res/icon-64.png")));
                         jButtonStart.setText("开始游戏");
                         starting = false;
                     }
@@ -148,13 +142,10 @@ public class GameFrame extends JFrame {
 
                 //ICON
                 if (Config.DEFAULT_ICON != null && !Config.DEFAULT_ICON.equals("")) {
-                    System.out.println(Config.DEFAULT_ICON);
                     GameFrame.this.setIconImage(new ImageIcon(Config.DEFAULT_ICON).getImage());
                 }
             }
         });
-
-        Config.update();
     }
 }
 
@@ -171,8 +162,8 @@ class Setting extends JDialog {
 
         JPanel about = new JPanel();
         about.setLayout(new BoxLayout(about, BoxLayout.X_AXIS));
-        JLabel icon = new JLabel(new ImageIcon("res/icon-64.png"));
-        JLabel msg = new JLabel("<html><center>关于</center><br>作者: 李日翔，刘海威<br>历时4天</html>", JLabel.CENTER);
+        JLabel icon = new JLabel(new ImageIcon(Config.buildPath("res/icon-64.png")));
+        JLabel msg = new JLabel("<html><center>关于</center><br>作者: 李日翔，刘海威<br>历时5天</html>", JLabel.CENTER);
         about.add(Box.createHorizontalStrut(30));
         about.add(icon);
         about.add(msg);

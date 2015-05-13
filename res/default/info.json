@@ -1,0 +1,35 @@
+{
+    "FORMAT" : 1.0,
+    "WALL" : {
+        "MODE": true,                  
+        "IMG" : "WALL.png",  
+        "RECT": [
+            [0, 0, -53, -1],
+            [0, -1, -1, -39],
+            [-1, -39, -52, -1],
+            [-52, -1, -1, -38]
+        ]
+    },
+    "SNAKE" : {
+        "MODE" : true,         
+        "INIT" : [-10, -10],
+        "HEAD" : "HEAD.png",   
+        "TURN" : 
+                "TURN_LU.png",   
+        "BODY" : "BODY.png",     
+        "TAIL" : "TAIL.png"   
+    },
+    "FOOD" : {
+        "MODE": true,                
+        "IMG" : "FOOD.png"     
+    },
+    "VIEW" : {
+        "MODE": true,        
+        "LHW" : 15,
+        "SHAPE" : "FILL-RECTANGLE",   
+        "IMG" : "bg.png",  
+        "RECT": [-53, -40],
+        "BG_COLOR": [0, 0, 0, 1],
+        "FG_COLOR": [255, 255, 255, 1]
+    }
+}

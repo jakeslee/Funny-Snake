@@ -3,12 +3,8 @@ package Game.Snake.Drawer;
 
 import Game.Snake.Configuration.Config;
 import Game.Snake.Controller.EventProcessListener;
-
+import org.json.JSONException;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -38,8 +34,7 @@ public class SplashWindow extends JWindow {
         super(frame);
         StartPanel startPanel = new StartPanel(image, waitTime);
 
-
-        //setSize(800, 575);
+        startPanel.setDoubleBuffered(true);
 
         // 建立一个标签，标签中显示图片。
         //
@@ -103,6 +98,7 @@ class StartPanel extends JPanel {
     private Image img = null;
     int delay = 0;
     int percent = 0;
+    boolean isLoading = false;
 
     public StartPanel(Image img, int delay) {
         super();
@@ -111,18 +107,30 @@ class StartPanel extends JPanel {
 
         setPreferredSize(new Dimension(img.getWidth(null), img.getHeight(null)));
 
-
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if (percent < 100)
+                if (!isLoading) {
+                    isLoading = true;
+                    try {
+                        Config.loadConfig();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (Config.CURRENT_MAP == null && Config.DEFAULT_MAP != null) {
+                        Config.applyMap(Config.DEFAULT_MAP);
+                    } else
+                        Config.applyMap(Config.CURRENT_MAP);
+                }
+                if (percent + 3 < 100)
                     percent += 3;
                 else
                     percent = 100;
                 StartPanel.this.repaint();
             }
-        }, 1000, delay/55);
+        }, 1000, delay / 55);
     }
 
     @Override
@@ -132,6 +140,7 @@ class StartPanel extends JPanel {
         g.drawImage(img, 0, 0, this);
         g.drawString("当前版本号: " + Config.VERSION, 10, 20);
         g.drawString("正在加载... " + percent + "%", 10, getHeight() - 10);
+        g.dispose();
     }
 }
 

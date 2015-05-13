@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Funny Snake" default="generateApp" basedir="..">
+<project name="Funny Snake" default="compile" basedir="..">
     <taskdef
             name="bundleapp"
             classname="com.oracle.appbundler.AppBundlerTask"
@@ -14,15 +14,15 @@
         </exec>
     </target>
 
-    <target name="generateApp" description="Build App for Mac OS X" depends="generateVersion">
+    <target name="generateApp" description="Build App for Mac OS X" depends="generateVersion, generateJar">
         <antcall target="bundle"/>
     </target>
 
     <target name="bundle">
-        <mkdir dir="${outputDir}"/>
+        <mkdir dir="${app.dir}"/>
         <bundleapp
-                outputdirectory="${outputDir}"
-                name="${appName}"
+                outputdirectory="${app.dir}"
+                name="${app.name}"
                 icon="psds/icon.icns"
                 displayname="贪吃蛇"
                 identifier="asia.gkc.FunnySnake"
@@ -33,11 +33,48 @@
             <classpath file="${jarPath}" />
             <option value="-Duser.dir=$APP_ROOT/Contents/Resources"/>
         </bundleapp>
-        <copy todir="${outputDir}/${appName}.app/Contents/Resources">
+        <copy todir="${app.dir}/${app.name}.app/Contents/Resources">
             <fileset dir="." >
                 <include name="res/"/>
                 <include name="config.json"/>
             </fileset>
         </copy>
     </target>
+
+    <!-- 为编译做准备 -->
+    <target name="init" depends="clean">
+        <tstamp />
+        <mkdir dir="${build.dir}" />
+        <mkdir dir="${jar.dir}" />
+    </target>
+
+    <!-- 编译src -->
+    <target name="compile" depends="init">
+        <javac srcdir="${src.dir}" destdir="${build.dir}">
+            <classpath>
+                <fileset dir="libs">
+                    <include name="*.jar" />
+                </fileset>
+            </classpath>
+        </javac>
+    </target>
+
+    <!-- 生成jar -->
+    <target name="generateJar" depends="compile">
+        <mkdir dir="${jar.dir}" />
+        <jar jarfile="${jar.dir}/${jar.name}" basedir="${build.dir}">
+            <manifest>
+                <attribute name="Manifest-Version" value="${manifest.version}" />
+                <attribute name="Created-By" value="${manifest.createby}" />
+                <attribute name="Main-Class" value="${manifest.main}" />
+            </manifest>
+            <zipfileset excludes="META-INF/*" src="libs/json.jar" />
+        </jar>
+    </target>
+
+    <target name="clean">
+        <delete dir="${build.dir}" />
+        <delete dir="${jar.dir}" />
+    </target>
+
 </project>

@@ -2,7 +2,6 @@ package Game.Snake.Controller;
 
 import Game.Snake.Configuration.Config;
 
-import javax.swing.*;
 import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -331,7 +330,7 @@ public class SnakeImpl implements Snake, Collidedable, Drawable {
     public DrawableRect getDrawableArea() {
         DrawableRect drawableRect = new DrawableRect();
         drawableRect.rectangles = getSnakeRect();
-        drawableRect.paintMethd = paintMethod;
+        drawableRect.paintMethod = paintMethod;
         drawableRect.meta = colorMap;
         return drawableRect;
     }

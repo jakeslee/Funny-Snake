@@ -14,7 +14,6 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
 import java.util.Map;
 
 /**
@@ -337,8 +336,8 @@ class GameScreen extends JPanel {
 
             for (Rectangle r : drawable.getDrawableArea().rectangles) {
                 Color toPaint = null;
-                if (drawable.getDrawableArea().paintMethd != null) {
-                    method = (String)drawable.getDrawableArea().paintMethd.get(r);
+                if (drawable.getDrawableArea().paintMethod != null) {
+                    method = (String)drawable.getDrawableArea().paintMethod.get(r);
                     try {
                         IMG = getImageByMethod(method);
                     } catch (Exception e) {
@@ -352,7 +351,7 @@ class GameScreen extends JPanel {
                             }
 
                         }else {
-                            toPaint = (Color)drawable.getDrawableArea().paintMethd.get(null);
+                            toPaint = (Color)drawable.getDrawableArea().paintMethod.get(null);
                         }
                     }
                 }else {

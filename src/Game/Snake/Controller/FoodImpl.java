@@ -86,7 +86,7 @@ public class FoodImpl implements Collidedable, Food, Drawable {
     public DrawableRect getDrawableArea() {
         DrawableRect drawableRect = new DrawableRect();
         drawableRect.rectangles = getRectangles();
-        drawableRect.paintMethd = paintMethod;
+        drawableRect.paintMethod = paintMethod;
         return drawableRect;
     }
 }

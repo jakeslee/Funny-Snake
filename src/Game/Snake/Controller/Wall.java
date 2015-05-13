@@ -1,7 +1,6 @@
 package Game.Snake.Controller;
 
 import java.awt.*;
-import java.awt.List;
 import java.util.*;
 
 /**
@@ -49,11 +48,11 @@ public class Wall implements Drawable, Collidedable {
     public DrawableRect getDrawableArea() {
         DrawableRect drawableRect = new DrawableRect();
         drawableRect.rectangles = rectangles;
-        drawableRect.paintMethd = new HashMap<>();
+        drawableRect.paintMethod = new HashMap<>();
         for (Rectangle r : drawableRect.rectangles) {
-            drawableRect.paintMethd.put(r, "WALL");
+            drawableRect.paintMethod.put(r, "WALL");
         }
-        drawableRect.paintMethd.put(null, paint);
+        drawableRect.paintMethod.put(null, paint);
         drawableRect.meta = Wall.class.getName();
         return drawableRect;
     }

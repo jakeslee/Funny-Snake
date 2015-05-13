@@ -124,7 +124,7 @@ class StartPanel extends JPanel {
                     } else
                         Config.applyMap(Config.CURRENT_MAP);
                 }
-                if (percent < 100)
+                if (percent + 3 < 100)
                     percent += 3;
                 else
                     percent = 100;

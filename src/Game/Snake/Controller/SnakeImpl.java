@@ -114,7 +114,7 @@ public class SnakeImpl implements Snake, Collidedable, Drawable {
                     if (CollideWatcher.isCollided(head.body, snakeNodes.get(i).body)) {
                         stop();
                         death.eventProcessing();
-                        break;
+                        return;
                     }
                 }
                 refresh.updateEvent(null);
